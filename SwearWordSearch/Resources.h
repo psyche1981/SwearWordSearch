@@ -30,8 +30,7 @@ public:
 	static void LoadImages();
 	static void LoadFonts();
 
-	static sf::Texture LoadTexture(const std::string& filename);	
-	static sf::Font LoadFont(const std::string& filename);
+	
 
 	static const sf::Font& GetFont(const std::string& name);
 	static const sf::Texture& GetTexture(const std::string& name);
@@ -39,4 +38,7 @@ public:
 private:
 	Resources() {}
 	~Resources() {}
+
+	static sf::Texture LoadTexture(const std::string& filename);
+	static sf::Font LoadFont(const std::string& filename);
 };

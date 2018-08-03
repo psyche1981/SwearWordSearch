@@ -15,7 +15,6 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
-	
 
 }
 
@@ -26,6 +25,7 @@ Game::~Game()
 
 void Game::Update(float dt)
 {
+	PopulateGrid();
 	_instructionText = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
 	for (auto& c : _grid)
 	{
@@ -66,6 +66,14 @@ void Game::Input(sf::Event event)
 	
 }
 
+void Game::PopulateGrid()
+{
+	for (auto& c : _grid)
+	{
+		c->CreateLetter();
+	}
+}
+
 void Game::DrawGridOutline(sf::RenderWindow* wnd)
 {
 	for (auto& o : _outlineSides)
@@ -97,7 +105,8 @@ void Game::SetUpGridOutline()
 
 Cell::Cell(int index, sf::Vector2f pos)
 	:
-	_index(index)
+	_index(index),
+	_position(pos)
 {
 	sf::Vector2f size(Constants::CELLSIZE, Constants::CELLSIZE);
 	_boundingBox = sf::Rect<float>(pos, size);
@@ -125,4 +134,12 @@ void Cell::Update(float dt)
 void Cell::Draw(sf::RenderWindow * wnd)
 {
 	wnd->draw(_rectShape);
+	wnd->draw(_letterText);
+}
+
+void Cell::CreateLetter()
+{
+	_letterText = sf::Text("d", Resources::GetFont("CNB"), 20);
+	_letterText.setPosition(_position);
+	_letterText.setFillColor(sf::Color::Black);
 }

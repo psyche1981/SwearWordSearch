@@ -20,15 +20,18 @@ public:
 	void Update(float dt);
 	void Draw(sf::RenderWindow* wnd);
 
-	
+	//temp
+	void CreateLetter();
 
 private:
 	sf::RectangleShape _rectShape;
 	sf::Rect<float> _boundingBox;
+	sf::Text _letterText;
+	sf::Vector2f _position;
 	
 	bool _selected = false;
 	int _index;
-	char letter;
+	char _letter;
 };
 
 class Game : public State
@@ -40,6 +43,8 @@ public:
 	void Update(float dt);
 	void Draw(sf::RenderWindow* wnd);
 	void Input(sf::Event event);
+
+	void PopulateGrid();
 
 private:
 	std::vector<std::unique_ptr<Cell>> _grid;
