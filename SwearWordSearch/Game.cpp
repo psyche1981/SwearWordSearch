@@ -11,7 +11,7 @@ Game::Game(StateManager* sm)
 		int row = i / 16;
 		int col = i % 16;
 		sf::Vector2f pos(_firstCellX + Constants::CELLSIZE * col, _firstCellY + Constants::CELLSIZE * row);
-		_grid.emplace_back(std::make_unique<Cell>(i, pos));
+		_grid.emplace_back(std::make_unique<Cell>(i, pos, 'd'));
 	}
 	
 	SetUpGridOutline();
@@ -103,10 +103,11 @@ void Game::SetUpGridOutline()
 	}
 }
 
-Cell::Cell(int index, sf::Vector2f pos)
+Cell::Cell(int index, sf::Vector2f pos, char letter)
 	:
 	_index(index),
-	_position(pos)
+	_position(pos),
+	_letter(letter)
 {
 	sf::Vector2f size(Constants::CELLSIZE, Constants::CELLSIZE);
 	_boundingBox = sf::Rect<float>(pos, size);
@@ -138,8 +139,11 @@ void Cell::Draw(sf::RenderWindow * wnd)
 }
 
 void Cell::CreateLetter()
-{
-	_letterText = sf::Text("d", Resources::GetFont("CNB"), 20);
-	_letterText.setPosition(_position);
+{	
+	_letterText = sf::Text(_letter, Resources::GetFont("CNB"), 20);
+	float newX = _position.x + _letterText.getGlobalBounds().width / 2;
+	float newY = _position.y; +_letterText.getGlobalBounds().height / 2;
+	sf::Vector2f newPos(newX, newY);
+	_letterText.setPosition(newPos);
 	_letterText.setFillColor(sf::Color::Black);
 }

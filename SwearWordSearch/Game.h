@@ -11,7 +11,7 @@
 class Cell
 {
 public:
-	Cell(int index, sf::Vector2f pos);
+	Cell(int index, sf::Vector2f pos, char letter);
 	~Cell();
 
 	const int GetIndex() const { return _index; }
