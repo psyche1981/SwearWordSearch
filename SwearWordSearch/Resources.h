@@ -2,6 +2,9 @@
 #include <map>
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <fstream>
+#include <string>
+
 
 namespace Constants
 {
@@ -24,16 +27,17 @@ enum States
 class Resources
 {
 public:
-	static std::map<std::string, sf::Font> _fonts;
-	static std::map<std::string, sf::Texture> _textures;
-
 	static void LoadImages();
 	static void LoadFonts();
+	static void LoadWords();
 
 	
 
 	static const sf::Font& GetFont(const std::string& name);
 	static const sf::Texture& GetTexture(const std::string& name);
+	static const std::string& GetWord(int index);
+	static const size_t GetNumWords();
+
 
 private:
 	Resources() {}
@@ -41,4 +45,7 @@ private:
 
 	static sf::Texture LoadTexture(const std::string& filename);
 	static sf::Font LoadFont(const std::string& filename);
+	static std::vector<std::string> _words;
+	static std::map<std::string, sf::Font> _fonts;
+	static std::map<std::string, sf::Texture> _textures;
 };

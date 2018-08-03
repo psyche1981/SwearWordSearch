@@ -13,8 +13,7 @@ public:
 		_window(sf::VideoMode(width, height), title),
 		_sm()
 	{
-		Resources::LoadFonts();
-		Resources::LoadImages();
+		
 	}
 
 	virtual ~Window() {}
@@ -60,6 +59,9 @@ private:
 
 int main()
 {
+	Resources::LoadFonts();
+	Resources::LoadImages();
+	Resources::LoadWords();
 	Window wnd(Constants::SCREENWIDTH, Constants::SCREENHEIGHT, "Swear-WordSearch");
 	wnd.Loop();
 	//std::cin.get();

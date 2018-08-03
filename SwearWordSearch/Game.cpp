@@ -15,7 +15,7 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
-
+	std::cout << Resources::GetWord(49)<< std::endl;
 }
 
 Game::~Game()
