@@ -6,16 +6,22 @@ Game::Game(StateManager* sm)
 {
 	_numWordsToFind = 4;
 	_countdownTimer = 30;
+	//create the grid with indiviual cells
 	for (int i = 0; i < Constants::NUMCELLS; i++)
 	{
 		int row = i / 16;
 		int col = i % 16;
 		sf::Vector2f pos(_firstCellX + Constants::CELLSIZE * col, _firstCellY + Constants::CELLSIZE * row);
-		_grid.emplace_back(std::make_unique<Cell>(i, pos, 'd'));
+		_grid.emplace_back(std::make_unique<Cell>(i, pos));
 	}
 	
 	SetUpGridOutline();
-
+	//temp to put a word on the grid
+	std::string word = Resources::GetWord(50);
+	for (size_t i = 0; i < word.length(); i++)
+	{
+		_grid[i]->SetLetter(word[i]);
+	}
 }
 
 Game::~Game()
@@ -236,17 +242,19 @@ void Game::InterpolateAndSelect(int index1, int index2)
 	}
 }
 
-Cell::Cell(int index, sf::Vector2f pos, char letter)
+Cell::Cell(int index, sf::Vector2f pos)
 	:
 	_index(index),
-	_position(pos),
-	_letter(letter)
+	_position(pos)
 {
 	sf::Vector2f size(Constants::CELLSIZE, Constants::CELLSIZE);
 	_boundingBox = sf::Rect<float>(pos, size);
 	_rectShape = sf::RectangleShape(size);
 	_rectShape.setFillColor(sf::Color::Red);
 	_rectShape.setPosition(pos);
+
+	//temp initialise to #
+	_letter = '#';
 }
 
 Cell::~Cell()
