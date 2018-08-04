@@ -16,7 +16,7 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
-	PopulateGrid(30);	
+	PopulateGrid(30);		
 }
 
 Game::~Game()
@@ -138,8 +138,6 @@ void Game::PopulateGrid(int numWords)
 			c->SetLetter(Random::GetRandomInt(97, 122));
 		}
 	}
-
-
 }
 
 //try the word starting in three different cells in three random directions
@@ -165,7 +163,8 @@ bool Game::AddWordToGrid(const std::string& word)
 					{
 						_grid[cellIndices[i]]->SetLetter(word[i]);
 					}
-					std::cout << word << " placed at index " << startIndex << std::endl;
+					_wordIndices.push_back(std::make_pair(cellIndices.front(), cellIndices.back()));
+					_wordIndices.push_back(std::make_pair(cellIndices.back(), cellIndices.front()));
 					return true;
 				}
 			}
