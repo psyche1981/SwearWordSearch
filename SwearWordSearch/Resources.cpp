@@ -71,6 +71,7 @@ const std::vector<std::string>& Resources::GetWords(int n)
 	static std::vector<std::string> words;
 	words.clear();
 	int num;
+	std::vector<int> prevNums;
 	if (n == 0)
 	{
 		return _words;
@@ -80,8 +81,11 @@ const std::vector<std::string>& Resources::GetWords(int n)
 		while (words.size() < n)
 		{
 			num = Random::GetRandomInt(0, Resources::GetNumWords() - 1);
-			//TODO: no duplicates
-			words.push_back(_words[num]);
+			if (!PreviouslySelected(prevNums, num))
+			{
+				prevNums.push_back(num);
+				words.push_back(_words[num]);
+			}			
 		}
 		return words;
 	}
@@ -95,6 +99,18 @@ sf::Font Resources::LoadFont(const std::string& filename)
 		std::cout << "Font not loaded: " << filename << std::endl;
 	}
 	return f;
+}
+
+bool Resources::PreviouslySelected(std::vector<int>& prev, int n)
+{
+	for (auto& p : prev)
+	{
+		if (n == p)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void Random::Seed()

@@ -48,6 +48,8 @@ private:
 
 	static sf::Texture LoadTexture(const std::string& filename);
 	static sf::Font LoadFont(const std::string& filename);
+	static bool PreviouslySelected(std::vector<int>& prev, int n);
+
 	static std::vector<std::string> _words;
 	static std::map<std::string, sf::Font> _fonts;
 	static std::map<std::string, sf::Texture> _textures;
