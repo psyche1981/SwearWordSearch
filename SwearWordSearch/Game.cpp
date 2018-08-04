@@ -16,7 +16,13 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
-	PopulateGrid(30);		
+	PopulateGrid(30);	
+
+	//show location of words
+	/*for (size_t i = 0; i < _wordIndices.size(); i++)
+	{
+		std::cout << _words[i] << " is at " << "(" << _wordIndices[i].first << ", " << _wordIndices[i].second << ")" << std::endl;
+	}*/
 }
 
 Game::~Game()
@@ -147,6 +153,7 @@ bool Game::AddWordToGrid(const std::string& word)
 	int numTries = 0;
 	int startIndex;
 	WordDirection wordDir;
+	std::string theWord = RemoveHashes(word);
 	while (numTries < 5)
 	{
 		startIndex = Random::GetRandomInt(0, Constants::NUMCELLS - 1);
@@ -154,18 +161,19 @@ bool Game::AddWordToGrid(const std::string& word)
 		if (_grid[startIndex]->GetLetter() == '-')
 		{
 			wordDir = Random::GetRandomWordDirection();
-			std::vector<int> cellIndices = GetCellIndices(wordDir, startIndex, word.length());
-			if (cellIndices.size() == word.length())//we have a place to put the word
+			std::vector<int> cellIndices = GetCellIndices(wordDir, startIndex, theWord.length());
+			if (cellIndices.size() == theWord.length())//we have a place to put the word
 			{
-				if (IndicesAreValid(cellIndices, word))
+				if (IndicesAreValid(cellIndices, theWord))
 				{
-					for (size_t i = 0; i < word.length(); i++)
+					for (size_t i = 0; i < theWord.length(); i++)
 					{
-						_grid[cellIndices[i]]->SetLetter(word[i]);
+						_grid[cellIndices[i]]->SetLetter(theWord[i]);
 					}
 					//add first and last index to the list of word indices
 					_wordIndices.push_back(std::make_pair(cellIndices.front(), cellIndices.back()));
-					_wordIndices.push_back(std::make_pair(cellIndices.back(), cellIndices.front()));
+					std::string newWord = ReplaceHashWithSpace(word);
+					_words.push_back(newWord);
 					return true;
 				}
 			}
@@ -286,6 +294,25 @@ bool Game::IndicesAreValid(const std::vector<int>& cellIndices, const std::strin
 		}
 	}
 	return true;
+}
+
+//removes hash characters from word
+std::string Game::RemoveHashes(const std::string& word)
+{
+	std::string theWord = word;
+	size_t pos = theWord.find('#');
+	if (pos != std::string::npos)
+	{
+		theWord.erase(pos, 1);
+	}
+	return theWord;
+}
+
+std::string Game::ReplaceHashWithSpace(const std::string& word)
+{
+	std::string newWord = word;
+	std::replace(newWord.begin(), newWord.end(), '#', ' ');
+	return newWord;
 }
 
 void Game::DrawGridOutline(sf::RenderWindow* wnd)
