@@ -16,7 +16,7 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
-	PopulateGrid(1);
+	PopulateGrid(10);
 	
 }
 
@@ -146,7 +146,7 @@ bool Game::AddWordToGrid(const std::string& word)
 	if (_grid[startIndex]->GetLetter() == '-')
 	{
 		//temp just try horiz to right first
-		WordDirection wordDir = WordDirection::LEFT;//Random::GetRandomWordDirection();
+		WordDirection wordDir = Random::GetRandomWordDirection();
 		std::vector<int> cellIndices = GetCellIndices(wordDir, startIndex, word.length());
 		if (cellIndices.size() == word.length())//we have a place to put the word
 		{
@@ -174,11 +174,26 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 	switch (wordDir)
 	{
 	case WordDirection::DOWN:
+		if (startRow + wordLength <= 16)
+		{
+			for (int i = startIndex; i <= startIndex + (wordLength - 1) * 16; i += 16)
+			{
+				cellIndices.push_back(i);
+			}
+		}
 		break;
 	case WordDirection::UP:
+		if (startRow + 1 >= wordLength)
+		{
+			int j = startIndex - ((int)wordLength - 1) * 16;
+			for (int i = startIndex; i >= j; i -= 16)
+			{
+				cellIndices.push_back(i);
+			}
+		}
 		break;
 	case WordDirection::LEFT:
-		if ((startCol + 1 - (int)wordLength) >= 0)
+		if (startCol + 1 >= wordLength)
 		{
 			int j = startIndex;
 			for (size_t i = 0; i < wordLength; i++)
@@ -197,12 +212,44 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 		}
 		break;
 	case WordDirection::NE:
+		if (wordLength <= 16 - startCol && startRow + 1 >= wordLength)
+		{
+			int j = startIndex - (wordLength - 1) * 15;
+			for (int i = startIndex; i >= j; i -= 15)
+			{
+				cellIndices.push_back(i);
+			}
+		}
 		break;
 	case WordDirection::NW:
+		if (startCol + 1 >= wordLength && startRow + 1 >= wordLength)
+		{
+			int j = startIndex - (wordLength - 1) * 17;
+			for (int i = startIndex; i >= j; i -= 17)
+			{
+				cellIndices.push_back(i);
+			}
+		}
 		break;
 	case WordDirection::SW:
+		if (startCol + 1 >= wordLength && startRow + wordLength <= 16)
+		{
+			int j = startIndex + (wordLength - 1) * 15;
+			for (int i = startIndex; i <= j; i += 15)
+			{
+				cellIndices.push_back(i);
+			}
+		}
 		break;
 	case WordDirection::SE:
+		if (wordLength <= 16 - startCol && startRow + wordLength <= 16)
+		{
+			int j = startIndex + (wordLength - 1) * 17;
+			for (int i = startIndex; i <= j; i += 17)
+			{
+				cellIndices.push_back(i);
+			}
+		}
 		break;
 	}
 
