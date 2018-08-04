@@ -7,7 +7,6 @@
 #include "Resources.h"
 
 
-
 class Cell
 {
 public:
@@ -17,6 +16,7 @@ public:
 	const int GetIndex() const { return _index; }
 	const sf::Rect<float>& GetBox() { return _boundingBox; }
 	void SetLetter(char letter);
+	const char GetLetter() { return _letter; }
 	void Click() { _selected = !_selected; }
 	void Update(float dt);
 	void Draw(sf::RenderWindow* wnd);
@@ -50,16 +50,22 @@ public:
 	void Draw(sf::RenderWindow* wnd);
 	void Input(sf::Event event);
 
-	void PopulateGrid();
+	
 
 private:
 	std::vector<std::unique_ptr<Cell>> _grid;
 	float _firstCellX = 50.0f;
 	float _firstCellY = 80.0f;
+
+
 	void DrawGridOutline(sf::RenderWindow* wnd);
 	void SetUpGridOutline();
 	bool GuessCandidate(int index1, int index2);
 	void InterpolateAndSelect(int index1, int index2);
+	void PopulateGrid(int numWords);
+	bool AddWordToGrid(const std::string& word);
+	std::vector<int> GetCellIndices(WordDirection wordDir, int startIndex, size_t wordLength);
+
 	std::vector<sf::RectangleShape> _outlineSides;
 	int _numWordsToFind;
 	int _countdownTimer;

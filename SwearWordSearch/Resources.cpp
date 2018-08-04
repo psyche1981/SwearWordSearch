@@ -131,3 +131,8 @@ float Random::GetRandomFloat(float lowerBound, float upperBound)
 
 	return randFloat(_randomEngine);
 }
+
+WordDirection Random::GetRandomWordDirection()
+{
+	return (WordDirection) GetRandomInt(0, 7);
+}

@@ -16,6 +16,20 @@ namespace Constants
 	static constexpr float CELLSIZE = 30.0f;
 }
 
+enum WordDirection
+{
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN,
+	NE,
+	NW, 
+	SE,
+	SW,
+
+	SIZE
+};
+
 enum States
 {
 	SPLASH,
@@ -62,6 +76,7 @@ public:
 
 	static int GetRandomInt(int lowerBound, int upperBound);
 	static float GetRandomFloat(float lowerBound, float upperBound);
+	static WordDirection GetRandomWordDirection();
 
 private:
 	static std::mt19937 _randomEngine;

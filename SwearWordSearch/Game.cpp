@@ -16,18 +16,8 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
-	//temp to put a word on the grid
-	std::string word = Resources::GetWord(Random::GetRandomInt(0, Resources::GetNumWords() - 1));
-	for (size_t i = 0; i < word.length(); i++)
-	{
-		_grid[i]->SetLetter(word[i]);
-	}
-	//temp to try the get random words functionality
-	std::vector<std::string> words = Resources::GetWords(50);
-	for (auto& w : words)
-	{
-		std::cout << w << std::endl;
-	}
+	PopulateGrid(1);
+	
 }
 
 Game::~Game()
@@ -36,11 +26,7 @@ Game::~Game()
 }
 
 void Game::Update(float dt)
-{
-	//should just do this once, not every frame, 
-	//but need to do it after construction until the staemanager is implemented
-	//PopulateGrid();
-	
+{	
 	_instructionText = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
 	for (auto& c : _grid)
 	{
@@ -121,9 +107,106 @@ void Game::Input(sf::Event event)
 	
 }
 
-void Game::PopulateGrid()
+void Game::PopulateGrid(int numWords)
 {
+	int numWordsAdded = 0;
+	//increase 50 random words if necessary
+	std::vector<std::string> words = Resources::GetWords(50);
+	while (numWordsAdded < numWords)
+	{		
+		for (auto it = words.cbegin(); it != words.cend();)
+		{			
+			if (AddWordToGrid(*it))
+			{
+				std::cout << *it << std::endl;
+				it = words.erase(it);
+				numWordsAdded++;
+				if (numWordsAdded == numWords)
+				{
+					break;
+				}
+			}
+			else
+			{
+				++it;
+			}
+		}
+	}
 	
+
+}
+
+//try the word starting in three different cells in three random directions
+//if doesnt fit - return false
+bool Game::AddWordToGrid(const std::string& word)
+{
+	int numTries = 0;
+	int startIndex = Random::GetRandomInt(0, Constants::NUMCELLS - 1);
+	//only try empty starting cells
+	if (_grid[startIndex]->GetLetter() == '-')
+	{
+		//temp just try horiz to right first
+		WordDirection wordDir = WordDirection::LEFT;//Random::GetRandomWordDirection();
+		std::vector<int> cellIndices = GetCellIndices(wordDir, startIndex, word.length());
+		if (cellIndices.size() == word.length())//we have a place to put the word
+		{
+			for (size_t i = 0; i < word.length();i++)
+			{
+				_grid[cellIndices[i]]->SetLetter(word[i]);
+			}
+
+			std::cout << word << " placed at index " << startIndex << std::endl;
+			return true;
+		}
+	}
+
+	
+	return false;
+}
+
+
+//return the indices of the cells that the word will span, includes the start index
+std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, size_t wordLength)
+{
+	std::vector<int> cellIndices;
+	int startRow = startIndex / 16;
+	int startCol = startIndex % 16;
+	switch (wordDir)
+	{
+	case WordDirection::DOWN:
+		break;
+	case WordDirection::UP:
+		break;
+	case WordDirection::LEFT:
+		if ((startCol + 1 - (int)wordLength) >= 0)
+		{
+			int j = startIndex;
+			for (size_t i = 0; i < wordLength; i++)
+			{
+				cellIndices.push_back(j--);
+			}
+		}
+		break;
+	case WordDirection::RIGHT:
+		if (wordLength <= 16 - startCol)
+		{
+			for (size_t i = startIndex; i < startIndex + wordLength;)
+			{
+				cellIndices.push_back(i++);
+			}
+		}
+		break;
+	case WordDirection::NE:
+		break;
+	case WordDirection::NW:
+		break;
+	case WordDirection::SW:
+		break;
+	case WordDirection::SE:
+		break;
+	}
+
+	return cellIndices;
 }
 
 void Game::DrawGridOutline(sf::RenderWindow* wnd)
