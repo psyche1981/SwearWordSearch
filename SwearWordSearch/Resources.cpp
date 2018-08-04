@@ -3,6 +3,7 @@
 std::map<std::string, sf::Font> Resources::_fonts;
 std::map<std::string, sf::Texture> Resources::_textures;
 std::vector<std::string> Resources::_words;
+std::mt19937 Random::_randomEngine;
 
 sf::Texture Resources::LoadTexture(const std::string& filename)
 {
@@ -78,4 +79,23 @@ sf::Font Resources::LoadFont(const std::string& filename)
 		std::cout << "Font not loaded: " << filename << std::endl;
 	}
 	return f;
+}
+
+void Random::Seed()
+{
+	_randomEngine = std::mt19937(time(nullptr));
+}
+
+int Random::GetRandomInt(int lowerBound, int upperBound)
+{
+	std::uniform_int_distribution<int> randInt(lowerBound, upperBound);
+
+	return randInt(_randomEngine);
+}
+
+float Random::GetRandomFloat(float lowerBound, float upperBound)
+{
+	std::uniform_real_distribution<float> randFloat(lowerBound, upperBound);
+
+	return randFloat(_randomEngine);
 }

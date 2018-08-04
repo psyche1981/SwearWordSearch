@@ -1,5 +1,7 @@
 #pragma once
 #include <map>
+#include <random>
+#include <ctime>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <fstream>
@@ -49,4 +51,16 @@ private:
 	static std::vector<std::string> _words;
 	static std::map<std::string, sf::Font> _fonts;
 	static std::map<std::string, sf::Texture> _textures;
+};
+
+class Random
+{
+public:
+	static void Seed();
+
+	static int GetRandomInt(int lowerBound, int upperBound);
+	static float GetRandomFloat(float lowerBound, float upperBound);
+
+private:
+	static std::mt19937 _randomEngine;
 };

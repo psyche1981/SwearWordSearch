@@ -15,6 +15,7 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
+
 }
 
 Game::~Game()
@@ -24,7 +25,10 @@ Game::~Game()
 
 void Game::Update(float dt)
 {
+	//should just do this once, not every frame, 
+	//but need to do it after construction until the staemanager is implemented
 	PopulateGrid();
+	
 	_instructionText = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
 	for (auto& c : _grid)
 	{
