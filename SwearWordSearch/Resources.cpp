@@ -66,9 +66,25 @@ const size_t Resources::GetNumWords()
 	return _words.size();
 }
 
-const std::vector<std::string>& Resources::GetWords()
+const std::vector<std::string>& Resources::GetWords(int n)
 {
-	return _words;
+	static std::vector<std::string> words;
+	words.clear();
+	int num;
+	if (n == 0)
+	{
+		return _words;
+	}
+	else
+	{
+		while (words.size() < n)
+		{
+			num = Random::GetRandomInt(0, Resources::GetNumWords() - 1);
+			//TODO: no duplicates
+			words.push_back(_words[num]);
+		}
+		return words;
+	}
 }
 
 sf::Font Resources::LoadFont(const std::string& filename)

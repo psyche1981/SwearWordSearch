@@ -39,7 +39,7 @@ public:
 	static const sf::Texture& GetTexture(const std::string& name);
 	static const std::string& GetWord(int index);
 	static const size_t GetNumWords();
-	static const std::vector<std::string>& GetWords();
+	static const std::vector<std::string>& GetWords(int n = 0);
 
 
 private:

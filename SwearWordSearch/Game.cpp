@@ -17,11 +17,18 @@ Game::Game(StateManager* sm)
 	
 	SetUpGridOutline();
 	//temp to put a word on the grid
-	std::string word = Resources::GetWord(50);
+	std::string word = Resources::GetWord(Random::GetRandomInt(0, Resources::GetNumWords() - 1));
 	for (size_t i = 0; i < word.length(); i++)
 	{
 		_grid[i]->SetLetter(word[i]);
 	}
+	std::cout << word << std::endl << std::endl;
+	//temp to try the get random words functionality
+	/*std::vector<std::string> words = Resources::GetWords(5);
+	for (auto& w : words)
+	{
+		std::cout << w << std::endl;
+	}*/
 }
 
 Game::~Game()
