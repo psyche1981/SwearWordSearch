@@ -16,6 +16,13 @@ namespace Constants
 	static constexpr float CELLSIZE = 30.0f;
 }
 
+enum Difficulty
+{
+	EASY,
+	INTERMEDIATE,
+	HARD
+};
+
 enum WordDirection
 {
 	LEFT,

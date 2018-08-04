@@ -4,7 +4,7 @@
 
 StateManager::StateManager()
 {
-	_states.emplace(std::make_unique<Game>(this));
+	_states.emplace(std::make_unique<Game>(this, Difficulty::EASY));
 }
 
 StateManager::~StateManager()

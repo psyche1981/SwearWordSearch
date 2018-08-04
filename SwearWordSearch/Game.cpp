@@ -1,8 +1,9 @@
 #include "Game.h"
 
-Game::Game(StateManager* sm)
+Game::Game(StateManager* sm, Difficulty diff)
 	:
-	State(sm)
+	State(sm),
+	_difficulty(diff)
 {
 	_numWordsToFind = 4;
 	_countdownTimer = 30;
@@ -14,15 +15,65 @@ Game::Game(StateManager* sm)
 		sf::Vector2f pos(_firstCellX + Constants::CELLSIZE * col, _firstCellY + Constants::CELLSIZE * row);
 		_grid.emplace_back(std::make_unique<Cell>(i, pos));
 	}
+
+	//create instruction text
+	_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
+	_instructionText = sf::Text(_instructionString, Resources::GetFont("CNB"), 30);
+	_instructionText.setPosition(30.0f, 5.0f);
+	_instructionText.setColor(sf::Color::Green);
+
+	//create score text
+	_scoreString = "Score: " + std::to_string(_score);
+	_scoreText = sf::Text(_scoreString, Resources::GetFont("CNB"), 30);
+	_scoreText.setPosition(590.0f, 500.0f);
+	_scoreText.setColor(sf::Color::Black);
 	
 	SetUpGridOutline();
-	PopulateGrid(30);	
+	PopulateGrid(30);
 
-	//show location of words
-	/*for (size_t i = 0; i < _wordIndices.size(); i++)
+	//show hints of words in grid
+	_hintText = sf::Text("Hints", Resources::GetFont("CNB"), 30);
+	_hintText.setPosition(610.0f, 80.0f);
+	_hintText.setColor(sf::Color::Black);
+	if (_difficulty == Difficulty::EASY)
+	{
+		//set word value
+		_wordValue = 10;
+		//show all words in grid
+		for (size_t i = 0; i < _words.size() / 2; i++)
+		{
+			_wordSfTexts.emplace_back(_words[i], Resources::GetFont("CNB"), 20);
+			_wordSfTexts[i].setPosition(600.0f, 120.0f + i * 20);
+			_wordSfTexts[i].setColor(sf::Color::Black);
+		}
+	}
+	else if (_difficulty == Difficulty::INTERMEDIATE)
+	{
+		//set word value
+		_wordValue = 20;
+		//small amount of words shown		
+		for (int i = 0; i < _words.size() / 8; i++)
+		{
+			_wordSfTexts.emplace_back(_words[i], Resources::GetFont("CNB"), 20);
+			_wordSfTexts[i].setPosition(600.0f, 110.0f + i * 20);
+			_wordSfTexts[i].setColor(sf::Color::Black);
+		}
+	}
+	else
+	{
+		//set word value
+		_wordValue = 30;
+		//no words shown on hard
+		_wordSfTexts.emplace_back("No hints on \nhard mode", Resources::GetFont("CNB"), 20);
+		_wordSfTexts[0].setPosition(600.0f, 120.0f);
+		_wordSfTexts[0].setColor(sf::Color::Black);
+	}
+
+	//temp: show location of words
+	for (size_t i = 0; i < _wordIndices.size(); i++)
 	{
 		std::cout << _words[i] << " is at " << "(" << _wordIndices[i].first << ", " << _wordIndices[i].second << ")" << std::endl;
-	}*/
+	}
 }
 
 Game::~Game()
@@ -32,25 +83,42 @@ Game::~Game()
 
 void Game::Update(float dt)
 {	
-	_instructionText = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
-	for (auto& c : _grid)
+	_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
+	_instructionText.setString(_instructionString);
+	_scoreString = "Score: " + std::to_string(_score);
+	_scoreText.setString(_scoreString);
+	if (_update)
 	{
-		c->Update(dt);
+		for (auto& c : _grid)
+		{
+			c->Update(dt);
+		}
+	}	
+	if (_levelCompleted)
+	{
+		_update = false;
+		std::cout << "Level Completed" << std::endl;
+
+		//stop it updating for ever
+		_levelCompleted = false;
+		//TODO: load next level
 	}
 }
 
 void Game::Draw(sf::RenderWindow * wnd)
-{
-	sf::Text inst(_instructionText, Resources::GetFont("CNB"), 30);
-	inst.setPosition(30.0f, 5.0f);
-	inst.setColor(sf::Color::Green);
-	wnd->draw(inst);
+{	
+	wnd->draw(_instructionText);
 	DrawGridOutline(wnd);
 	for (auto& c : _grid)
 	{
 		c->Draw(wnd);
 	}
-	
+	wnd->draw(_hintText);
+	for (auto& w : _wordSfTexts)
+	{
+		wnd->draw(w);
+	}
+	wnd->draw(_scoreText);
 }
 
 void Game::Input(sf::Event event)
@@ -85,8 +153,31 @@ void Game::Input(sf::Event event)
 						{
 							InterpolateAndSelect(i1, i2);
 							_selection = std::make_pair(i1, i2);
-							//TODO check if selection is in list of solution pairs
-							std::cout << _selection.first << " , " << _selection.second << std::endl;
+							//check the word indices against the selection indices
+							for (size_t i = 0; i < _wordIndices.size(); i++)
+							{
+								if ((_selection.first == _wordIndices[i].first && _selection.second == _wordIndices[i].second)
+									|| (_selection.first == _wordIndices[i].second && _selection.second == _wordIndices[i].first))
+								{//found a word
+									for (auto& c : _grid)
+									{
+										if (c->IsSelected())
+										{
+											c->Found();
+											c->Deselect();
+										}
+									}
+									_numCellsSelected = 0;
+									_prevSelectedCellIndex = -1;
+									_foundWords.push_back(_words[i]);
+									_score += _wordValue;
+									_numWordsToFind--;
+									if (_numWordsToFind == 0)
+									{
+										_levelCompleted = true;
+									}
+								}
+							}
 						}
 						else
 						{
@@ -173,6 +264,7 @@ bool Game::AddWordToGrid(const std::string& word)
 					//add first and last index to the list of word indices
 					_wordIndices.push_back(std::make_pair(cellIndices.front(), cellIndices.back()));
 					std::string newWord = ReplaceHashWithSpace(word);
+					//add the word into the word vector with spaces if necessary
 					_words.push_back(newWord);
 					return true;
 				}
@@ -182,7 +274,6 @@ bool Game::AddWordToGrid(const std::string& word)
 	}	
 	return false;
 }
-
 
 //return the indices of the cells that the word will span, includes the start index
 std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, size_t wordLength)
@@ -463,9 +554,13 @@ void Cell::SetLetter(char letter)
 
 void Cell::Update(float dt)
 {
-	if (_selected)
+	if (_found && !_selected) 
+	{		
+		_rectShape.setFillColor(sf::Color(0, 255, 0,126));
+	}
+	else if ((_found && _selected) || (_selected && !_found))
 	{
-		_rectShape.setFillColor(sf::Color::Blue);
+		_rectShape.setFillColor(sf::Color(0, 0, 255, 200));
 	}
 	else
 	{
@@ -482,8 +577,8 @@ void Cell::Draw(sf::RenderWindow * wnd)
 void Cell::CreateLetter()
 {	
 	_letterText = sf::Text(_letter, Resources::GetFont("CNB"), 20);
-	float newX = _position.x + _letterText.getGlobalBounds().width / 2;
-	float newY = _position.y; +_letterText.getGlobalBounds().height / 2;
+	float newX = _position.x + _letterText.getGlobalBounds().width;
+	float newY = _position.y + _letterText.getGlobalBounds().height / 2;
 	sf::Vector2f newPos(newX, newY);
 	_letterText.setPosition(newPos);
 	_letterText.setFillColor(sf::Color::Black);

@@ -24,8 +24,8 @@ public:
 	void Deselect() { _selected = false; }
 	void Select() { _selected = true; }
 
-
-	
+	const bool IsSelected() { return _selected; }
+	void Found() { _found = true; }
 
 private:
 	sf::RectangleShape _rectShape;
@@ -34,6 +34,7 @@ private:
 	sf::Vector2f _position;
 	
 	bool _selected = false;
+	bool _found = false;
 	int _index;
 	char _letter;
 
@@ -43,7 +44,7 @@ private:
 class Game : public State
 {
 public:
-	Game(StateManager* sm);
+	Game(StateManager* sm, Difficulty diff);
 	virtual ~Game();
 
 	void Update(float dt);
@@ -56,6 +57,7 @@ private:
 	std::vector<std::unique_ptr<Cell>> _grid;
 	float _firstCellX = 50.0f;
 	float _firstCellY = 80.0f;
+	Difficulty _difficulty;
 
 
 	void DrawGridOutline(sf::RenderWindow* wnd);
@@ -71,11 +73,21 @@ private:
 
 	std::vector<sf::RectangleShape> _outlineSides;
 	int _numWordsToFind;
+	int _wordValue;
+	int _score = 0;
 	int _countdownTimer;
-	std::string _instructionText;
+	bool _levelCompleted = false;
+	bool _update = true;
 	int _numCellsSelected = 0;
 	int _prevSelectedCellIndex = -1;
 	std::pair<int, int> _selection;
 	std::vector<std::pair<int, int>> _wordIndices;
 	std::vector<std::string> _words;
+	std::vector<std::string> _foundWords;
+	sf::Text _instructionText;
+	std::string _instructionString;
+	std::vector<sf::Text> _wordSfTexts;
+	sf::Text _hintText;
+	sf::Text _scoreText;
+	std::string _scoreString;
 };
