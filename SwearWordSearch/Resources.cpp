@@ -37,7 +37,10 @@ void Resources::LoadWords()
 		std::string s;
 		while (std::getline(f, s))
 		{
-			_words.push_back(s);
+			if (s.length() >= 3 && s.length() <= 16)
+			{
+				_words.push_back(s);
+			}			
 		}
 	}
 }
@@ -60,6 +63,11 @@ const std::string & Resources::GetWord(int index)
 const size_t Resources::GetNumWords()
 {
 	return _words.size();
+}
+
+const std::vector<std::string>& Resources::GetWords()
+{
+	return _words;
 }
 
 sf::Font Resources::LoadFont(const std::string& filename)
