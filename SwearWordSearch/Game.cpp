@@ -16,8 +16,7 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
-	PopulateGrid(10);
-	
+	PopulateGrid(30);	
 }
 
 Game::~Game()
@@ -118,7 +117,6 @@ void Game::PopulateGrid(int numWords)
 		{			
 			if (AddWordToGrid(*it))
 			{
-				std::cout << *it << std::endl;
 				it = words.erase(it);
 				numWordsAdded++;
 				if (numWordsAdded == numWords)
@@ -132,7 +130,15 @@ void Game::PopulateGrid(int numWords)
 			}
 		}
 	}
-	
+	//populate empty cells with random letter
+	for (auto& c : _grid)
+	{
+		if (c->GetLetter() == '-')
+		{
+			c->SetLetter(Random::GetRandomInt(97, 122));
+		}
+	}
+
 
 }
 
@@ -141,26 +147,31 @@ void Game::PopulateGrid(int numWords)
 bool Game::AddWordToGrid(const std::string& word)
 {
 	int numTries = 0;
-	int startIndex = Random::GetRandomInt(0, Constants::NUMCELLS - 1);
-	//only try empty starting cells
-	if (_grid[startIndex]->GetLetter() == '-')
+	int startIndex;
+	WordDirection wordDir;
+	while (numTries < 5)
 	{
-		//temp just try horiz to right first
-		WordDirection wordDir = Random::GetRandomWordDirection();
-		std::vector<int> cellIndices = GetCellIndices(wordDir, startIndex, word.length());
-		if (cellIndices.size() == word.length())//we have a place to put the word
+		startIndex = Random::GetRandomInt(0, Constants::NUMCELLS - 1);
+		//only try empty starting cells
+		if (_grid[startIndex]->GetLetter() == '-')
 		{
-			for (size_t i = 0; i < word.length();i++)
+			wordDir = Random::GetRandomWordDirection();
+			std::vector<int> cellIndices = GetCellIndices(wordDir, startIndex, word.length());
+			if (cellIndices.size() == word.length())//we have a place to put the word
 			{
-				_grid[cellIndices[i]]->SetLetter(word[i]);
+				if (IndicesAreValid(cellIndices, word))
+				{
+					for (size_t i = 0; i < word.length(); i++)
+					{
+						_grid[cellIndices[i]]->SetLetter(word[i]);
+					}
+					std::cout << word << " placed at index " << startIndex << std::endl;
+					return true;
+				}
 			}
-
-			std::cout << word << " placed at index " << startIndex << std::endl;
-			return true;
-		}
-	}
-
-	
+			numTries++;
+		}	
+	}	
 	return false;
 }
 
@@ -254,6 +265,27 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 	}
 
 	return cellIndices;
+}
+
+bool Game::IndicesAreValid(const std::vector<int>& cellIndices, const std::string& word)
+{
+	auto wordIt = word.cbegin();
+	for (auto it = cellIndices.cbegin(); it != cellIndices.cend(); ++it, ++wordIt)
+	{
+		char letter = _grid[*it]->GetLetter();
+		if (letter == '-')//"empty cell"
+		{
+			continue;
+		}
+		else
+		{
+			if (letter != *wordIt)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
 }
 
 void Game::DrawGridOutline(sf::RenderWindow* wnd)

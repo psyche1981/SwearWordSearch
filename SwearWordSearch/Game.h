@@ -65,6 +65,8 @@ private:
 	void PopulateGrid(int numWords);
 	bool AddWordToGrid(const std::string& word);
 	std::vector<int> GetCellIndices(WordDirection wordDir, int startIndex, size_t wordLength);
+	bool IndicesAreValid(const std::vector<int>& cellIndices, const std::string& word);
+
 
 	std::vector<sf::RectangleShape> _outlineSides;
 	int _numWordsToFind;
@@ -73,4 +75,5 @@ private:
 	int _numCellsSelected = 0;
 	int _prevSelectedCellIndex = -1;
 	std::pair<int, int> _selection;
+	std::vector<std::pair<int, int>> _wordIndices;
 };
