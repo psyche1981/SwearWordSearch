@@ -16,7 +16,7 @@ public:
 
 	const int GetIndex() const { return _index; }
 	const sf::Rect<float>& GetBox() { return _boundingBox; }
-	void SetLetter(char letter) { _letter = letter; }
+	void SetLetter(char letter);
 	void Click() { _selected = !_selected; }
 	void Update(float dt);
 	void Draw(sf::RenderWindow* wnd);

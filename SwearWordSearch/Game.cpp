@@ -267,6 +267,12 @@ Cell::~Cell()
 	
 }
 
+void Cell::SetLetter(char letter)
+{
+	_letter = letter;
+	_letterText.setString(_letter);
+}
+
 void Cell::Update(float dt)
 {
 	if (_selected)
