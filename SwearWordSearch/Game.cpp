@@ -15,12 +15,11 @@ Game::Game(StateManager* sm)
 	}
 	
 	SetUpGridOutline();
-	std::cout << Resources::GetWord(49)<< std::endl;
 }
 
 Game::~Game()
 {
-	std::cout << "Game Destroyed" << std::endl;
+	
 }
 
 void Game::Update(float dt)
@@ -60,6 +59,46 @@ void Game::Input(sf::Event event)
 			if (c->GetBox().contains(x, y))
 			{
 				c->Click();
+				_numCellsSelected++;
+				if (_numCellsSelected == 1)
+				{
+					_prevSelectedCellIndex = c->GetIndex();
+				}
+				else if (_numCellsSelected == 2)
+				{
+					int i2 = c->GetIndex();
+					int i1 = _prevSelectedCellIndex;
+					if (i1 == i2)
+					{
+						_numCellsSelected = 0;
+					}
+					else
+					{
+						if (GuessCandidate(i1, i2))
+						{
+							InterpolateAndSelect(i1, i2);
+							_selection = std::make_pair(i1, i2);
+							//check if selection is in list of solution pairs
+							std::cout << _selection.first << " , " << _selection.second << std::endl;
+						}
+						else
+						{
+							_grid[i1]->Deselect();
+							_grid[i2]->Deselect();
+							_numCellsSelected = 0;
+							_prevSelectedCellIndex = -1;
+						}
+					}					
+				}
+				else
+				{
+					for (auto& c : _grid)
+					{
+						c->Deselect();
+					}
+					_numCellsSelected = 0;
+					_prevSelectedCellIndex = -1;
+				}
 			}
 		}		
 	}
@@ -100,6 +139,96 @@ void Game::SetUpGridOutline()
 	for (auto& s : _outlineSides)
 	{
 		s.setFillColor(sf::Color::Black);
+	}
+}
+
+bool Game::GuessCandidate(int index1, int index2)
+{
+	int row1 = index1 / 16;
+	int row2 = index2 / 16;
+	int col1 = index1 % 16;
+	int col2 = index2 % 16;
+
+	return (std::abs(row1 - row2) == std::abs(col1 - col2)) || (row1 == row2) || (col1 == col2);
+}
+
+void Game::InterpolateAndSelect(int index1, int index2)
+{
+	int row1 = index1 / 16;
+	int row2 = index2 / 16;
+	int col1 = index1 % 16;
+	int col2 = index2 % 16;
+
+	if (row1 == row2)
+	{
+		if (index1 < index2)
+		{			
+			for (int num = index1 + 1; num < index2; num++)
+			{
+				_grid[num]->Select();
+			}
+		}
+		else
+		{
+			for (int num = index2 + 1; num < index1; num++)
+			{
+				_grid[num]->Select();
+			}
+		}
+	}
+	else if (col1 == col2)
+	{
+		if (index1 < index2)
+		{
+			for (int num = index1 + 16; num < index2; num += 16)
+			{
+				_grid[num]->Select();
+			}
+		}
+		else
+		{
+			for (int num = index2 + 16; num < index1; num += 16)
+			{
+				_grid[num]->Select();
+			}
+		}
+	}
+	else //diagonal
+	{
+		if (row1 < row2)
+		{
+			if (col1 < col2)
+			{		
+				for (int num = index1 + 17; num < index2; num += 17)
+				{
+					_grid[num]->Select();
+				}				
+			}
+			else
+			{
+				for (int num = index1 + 15; num < index2; num += 15)
+				{
+					_grid[num]->Select();
+				}
+			}			
+		}
+		else
+		{
+			if (col1 < col2)
+			{
+				for (int num = index1 - 15; num > index2; num -= 15)
+				{
+					_grid[num]->Select();
+				}
+			}
+			else
+			{
+				for (int num = index1 - 17; num > index2; num -= 17)
+				{
+					_grid[num]->Select();
+				}
+			}
+		}
 	}
 }
 

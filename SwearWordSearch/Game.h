@@ -20,6 +20,9 @@ public:
 	void Update(float dt);
 	void Draw(sf::RenderWindow* wnd);
 
+	void Deselect() { _selected = false; }
+	void Select() { _selected = true; }
+
 	//temp
 	void CreateLetter();
 
@@ -52,8 +55,13 @@ private:
 	float _firstCellY = 80.0f;
 	void DrawGridOutline(sf::RenderWindow* wnd);
 	void SetUpGridOutline();
+	bool GuessCandidate(int index1, int index2);
+	void InterpolateAndSelect(int index1, int index2);
 	std::vector<sf::RectangleShape> _outlineSides;
 	int _numWordsToFind;
 	int _countdownTimer;
 	std::string _instructionText;
+	int _numCellsSelected = 0;
+	int _prevSelectedCellIndex = -1;
+	std::pair<int, int> _selection;
 };

@@ -12,8 +12,7 @@ public:
 		:
 		_window(sf::VideoMode(width, height), title),
 		_sm()
-	{
-		
+	{		
 	}
 
 	virtual ~Window() {}
