@@ -24,8 +24,8 @@ public:
 	void Deselect() { _selected = false; }
 	void Select() { _selected = true; }
 
-	//temp
-	void CreateLetter();
+
+	
 
 private:
 	sf::RectangleShape _rectShape;
@@ -36,6 +36,8 @@ private:
 	bool _selected = false;
 	int _index;
 	char _letter;
+
+	void CreateLetter();
 };
 
 class Game : public State

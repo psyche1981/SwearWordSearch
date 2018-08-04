@@ -33,7 +33,7 @@ void Game::Update(float dt)
 {
 	//should just do this once, not every frame, 
 	//but need to do it after construction until the staemanager is implemented
-	PopulateGrid();
+	//PopulateGrid();
 	
 	_instructionText = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
 	for (auto& c : _grid)
@@ -88,7 +88,7 @@ void Game::Input(sf::Event event)
 						{
 							InterpolateAndSelect(i1, i2);
 							_selection = std::make_pair(i1, i2);
-							//check if selection is in list of solution pairs
+							//TODO check if selection is in list of solution pairs
 							std::cout << _selection.first << " , " << _selection.second << std::endl;
 						}
 						else
@@ -117,10 +117,7 @@ void Game::Input(sf::Event event)
 
 void Game::PopulateGrid()
 {
-	for (auto& c : _grid)
-	{
-		c->CreateLetter();
-	}
+	
 }
 
 void Game::DrawGridOutline(sf::RenderWindow* wnd)
@@ -253,12 +250,14 @@ Cell::Cell(int index, sf::Vector2f pos)
 	_rectShape.setFillColor(sf::Color::Red);
 	_rectShape.setPosition(pos);
 
-	//temp initialise to #
-	_letter = '#';
+	//temp initialise to -
+	_letter = '-';
+	CreateLetter();
 }
 
 Cell::~Cell()
 {
+	
 }
 
 void Cell::Update(float dt)
