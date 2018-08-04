@@ -163,6 +163,7 @@ bool Game::AddWordToGrid(const std::string& word)
 					{
 						_grid[cellIndices[i]]->SetLetter(word[i]);
 					}
+					//add first and last index to the list of word indices
 					_wordIndices.push_back(std::make_pair(cellIndices.front(), cellIndices.back()));
 					_wordIndices.push_back(std::make_pair(cellIndices.back(), cellIndices.front()));
 					return true;
