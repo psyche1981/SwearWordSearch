@@ -2,7 +2,7 @@
 
 MainStateManager::MainStateManager()
 {
-	_currentState = std::make_unique<GameState>(Difficulty::EASY);
+	_currentState = std::make_unique<MainMenuState>();
 	_currentState->AddObserver(this);
 }
 
@@ -34,11 +34,21 @@ void MainStateManager::ChangeState(MainStates nextState)
 {
 	switch (nextState)
 	{
-	case MainStates::GAME_OVER:
-		GameState* g = (GameState*)_currentState.get();
-		int score = g->GetScore();
-		_currentState = std::make_unique<GameOverState>(score);
+	case MainStates::GAME:
+		//TODO: pass in difficulty from menu - user selected
+		_currentState = std::make_unique<GameState>(Difficulty::EASY);
 		_currentState->AddObserver(this);
+		break;
+	case MainStates::GAME_OVER:
+		{
+			GameState* g = (GameState*)_currentState.get();
+			int score = g->GetScore();
+			_currentState = std::make_unique<GameOverState>(score);
+			_currentState->AddObserver(this);
+		}		
+		break;
+	case MainStates::QUIT:
+		std::cout << "Quitting" << std::endl;
 		break;
 	}
 }

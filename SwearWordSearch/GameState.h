@@ -9,8 +9,6 @@
 #include "Timer.h"
 
 
-
-
 class GameState : public MainState
 {
 public:

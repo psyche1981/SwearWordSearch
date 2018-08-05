@@ -146,6 +146,7 @@
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameOverState.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="MainStateManager.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Cell.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GameOverState.h" />
+    <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="MainState.h" />

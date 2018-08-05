@@ -5,6 +5,7 @@
 #include "Resources.h"
 #include "MainState.h"
 #include "GameState.h"
+#include "MainMenuState.h"
 #include "GameOverState.h"
 #include "Observer.h"
 
