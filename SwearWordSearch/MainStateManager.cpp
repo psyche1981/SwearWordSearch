@@ -47,9 +47,13 @@ void MainStateManager::ChangeState(MainStates nextState)
 			_currentState->AddObserver(this);
 		}		
 		break;
-	case MainStates::QUIT:
-		std::cout << "Quitting" << std::endl;
+	case MainStates::MENU:
+		_currentState = std::make_unique<MainMenuState>();
+		_currentState->AddObserver(this);
 		break;
+	case MainStates::TUTORIAL:
+		_currentState = std::make_unique<TutorialState>();
+		_currentState->AddObserver(this);
 	}
 }
 

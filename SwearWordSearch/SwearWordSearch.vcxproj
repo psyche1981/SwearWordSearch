@@ -151,6 +151,7 @@
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="MainStateManager.cpp" />
     <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="TutorialState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -165,6 +166,7 @@
     <ClInclude Include="MainState.h" />
     <ClInclude Include="MainStateManager.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TutorialState.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Resources\words.txt" />

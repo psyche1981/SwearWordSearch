@@ -178,9 +178,19 @@ void GameState::Input(sf::Event event)
 					_prevSelectedCellIndex = -1;
 				}
 			}
-		}		
+		}
+		//TODO: handle the mose clicking the quit button
 	}
 	
+	//temp key input to get quit working
+	if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::Escape)
+		{
+			_nextState = MainStates::MENU;
+			NotifyObservers();
+		}
+	}
 }
 
 void GameState::PopulateGrid(int numWords)

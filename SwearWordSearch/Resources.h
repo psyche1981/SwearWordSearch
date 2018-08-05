@@ -25,7 +25,6 @@ enum MainStates
 	GAME,
 	GAME_OVER,
 	PAUSE,
-	QUIT,
 
 	MAINSTATES_DEFAULT
 };

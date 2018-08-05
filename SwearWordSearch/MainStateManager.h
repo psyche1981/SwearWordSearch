@@ -6,6 +6,7 @@
 #include "MainState.h"
 #include "GameState.h"
 #include "MainMenuState.h"
+#include "TutorialState.h"
 #include "GameOverState.h"
 #include "Observer.h"
 

@@ -7,9 +7,10 @@ MainMenuState::MainMenuState()
 	_titleText = sf::Text("(SWEAR)WORDSEARCH", Resources::GetFont("CNB"), 60);
 	_titleText.setColor(sf::Color::Black);
 	_titleText.setPosition(100.0f, 100.0f);
+
 	//TODO: menu item factory function instead of hard coded
 	_menuTexts.emplace_back("PLAY", Resources::GetFont("CNB"), 30);
-	_menuTexts.emplace_back("QUIT", Resources::GetFont("CNB"), 30);
+	_menuTexts.emplace_back("TUTORIAL", Resources::GetFont("CNB"), 30);
 
 	_menuTexts[0].setPosition(350.0f, 300.0f);
 	_menuTexts[0].setColor(sf::Color::Blue);
@@ -38,22 +39,19 @@ void MainMenuState::Draw(sf::RenderWindow* wnd)
 void MainMenuState::Input(sf::Event event)
 {
 	//TODO: do mouse collision detection
-
-	//temp to get it working
-	if (event.type == sf::Event::KeyPressed)
+	if (event.type == sf::Event::MouseButtonPressed)
 	{
-		switch (event.key.code)
+		float x = event.mouseButton.x;
+		float y = event.mouseButton.y;
+		if (_menuTexts[0].getGlobalBounds().contains(x, y))
 		{
-		case sf::Keyboard::P:
 			_nextState = MainStates::GAME;
 			NotifyObservers();
-			break;
-		case sf::Keyboard::Q:
-			_nextState = MainStates::QUIT;
-			NotifyObservers();
-			break;
 		}
-		
-
+		else if (_menuTexts[1].getGlobalBounds().contains(x, y))
+		{
+			_nextState = MainStates::TUTORIAL;
+			NotifyObservers();
+		}
 	}
 }
