@@ -96,3 +96,5 @@ fudge#packer
 clunge
 clopper
 space#docking
+crap
+slash

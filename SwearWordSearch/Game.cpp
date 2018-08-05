@@ -7,6 +7,7 @@ Game::Game(StateManager* sm, Difficulty diff)
 {
 	_numWordsToFind = 4;
 	_countdownTimer = 30;
+	_timer.Begin();
 	//create the grid with indiviual cells
 	for (int i = 0; i < Constants::NUMCELLS; i++)
 	{
@@ -83,25 +84,46 @@ Game::~Game()
 
 void Game::Update(float dt)
 {	
-	_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
-	_instructionText.setString(_instructionString);
-	_scoreString = "Score: " + std::to_string(_score);
-	_scoreText.setString(_scoreString);
-	if (_update)
+	int timeRemaining = (int)(_countdownTimer - _timer.GetElapsed());
+	if (!_gameOver)
 	{
-		for (auto& c : _grid)
+		_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(timeRemaining) + " seconds";
+		_instructionText.setString(_instructionString);
+		_scoreString = "Score: " + std::to_string(_score);
+		_scoreText.setString(_scoreString);
+
+		if (timeRemaining <= 0)
 		{
-			c->Update(dt);
+			_gameOver = true;
+			_update = false;
+			_timer.End();
+			timeRemaining = 0;
+		}
+		if (_update)
+		{
+			for (auto& c : _grid)
+			{
+				c->Update(dt);
+			}
+		}
+		if (_levelCompleted)
+		{
+			_instructionString = "Level Completed. You Scored " + std::to_string(_score);
+			_instructionText.setString(_instructionString);
+			_update = false;
+			_timer.End();
+
+
+			//TODO: load next level
 		}
 	}	
-	if (_levelCompleted)
+	else
 	{
 		_update = false;
-		std::cout << "Level Completed" << std::endl;
+		_instructionString = "Game Over. You Scored " + std::to_string(_score);
+		_instructionText.setString(_instructionString);
 
-		//stop it updating for ever
-		_levelCompleted = false;
-		//TODO: load next level
+		//TODO: go to game over state
 	}
 }
 

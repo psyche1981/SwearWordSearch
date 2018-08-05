@@ -5,6 +5,7 @@
 
 #include "State.h"
 #include "Resources.h"
+#include "Timer.h"
 
 
 class Cell
@@ -59,6 +60,8 @@ private:
 	float _firstCellY = 80.0f;
 	Difficulty _difficulty;
 
+	Timer _timer;
+
 
 	void DrawGridOutline(sf::RenderWindow* wnd);
 	void SetUpGridOutline();
@@ -77,6 +80,7 @@ private:
 	int _score = 0;
 	int _countdownTimer;
 	bool _levelCompleted = false;
+	bool _gameOver = false;
 	bool _update = true;
 	int _numCellsSelected = 0;
 	int _prevSelectedCellIndex = -1;
