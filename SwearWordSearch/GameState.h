@@ -31,6 +31,7 @@ private:
 
 	void CreateInstructionText();
 	void CreateScoreText();
+	void CreateQuitText();
 	void ShowHints();
 	void DrawGridOutline(sf::RenderWindow* wnd);
 	void SetUpGridOutline();
@@ -64,5 +65,6 @@ private:
 	std::vector<sf::Text> _wordSfTexts;
 	sf::Text _hintText;
 	sf::Text _scoreText;
+	sf::Text _quitText;
 	std::string _scoreString;
 };

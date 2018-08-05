@@ -19,6 +19,7 @@ GameState::GameState(Difficulty diff)
 
 	CreateInstructionText();
 	CreateScoreText();
+	CreateQuitText();
 	
 	SetUpGridOutline();
 	PopulateGrid(30);
@@ -98,6 +99,7 @@ void GameState::Draw(sf::RenderWindow * wnd)
 		wnd->draw(w);
 	}
 	wnd->draw(_scoreText);
+	wnd->draw(_quitText);
 }
 
 void GameState::Input(sf::Event event)
@@ -179,13 +181,7 @@ void GameState::Input(sf::Event event)
 				}
 			}
 		}
-		//TODO: handle the mose clicking the quit button
-	}
-	
-	//temp key input to get quit working
-	if (event.type == sf::Event::KeyPressed)
-	{
-		if (event.key.code == sf::Keyboard::Escape)
+		if (_quitText.getGlobalBounds().contains(x, y))
 		{
 			_nextState = MainStates::MENU;
 			NotifyObservers();
@@ -410,6 +406,13 @@ void GameState::CreateScoreText()
 	_scoreText = sf::Text(_scoreString, Resources::GetFont("CNB"), 30);
 	_scoreText.setPosition(590.0f, 500.0f);
 	_scoreText.setColor(sf::Color::Black);
+}
+
+void GameState::CreateQuitText()
+{
+	_quitText = sf::Text("QUIT", Resources::GetFont("CNB"), 30);
+	_quitText.setPosition(690.0f, 550.0f);
+	_quitText.setColor(sf::Color::Black);
 }
 
 void GameState::ShowHints()
