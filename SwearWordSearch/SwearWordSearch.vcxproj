@@ -142,7 +142,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Cell.cpp" />
+    <ClCompile Include="GameState.cpp" />
     <ClCompile Include="GameOverState.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Observer.cpp" />
@@ -154,7 +155,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="Cell.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="GameOverState.h" />
     <ClInclude Include="Observer.h" />
     <ClInclude Include="Resources.h" />

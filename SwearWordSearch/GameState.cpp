@@ -1,6 +1,6 @@
-#include "Game.h"
+#include "GameState.h"
 
-Game::Game(Difficulty diff)
+GameState::GameState(Difficulty diff)
 	:
 	_difficulty(diff)
 {
@@ -32,16 +32,16 @@ Game::Game(Difficulty diff)
 	}
 }
 
-Game::~Game()
+GameState::~GameState()
 {
 	std::cout << "Game Destroyed" << std::endl;
 }
 
-void Game::Update(float dt)
+void GameState::Update(float dt)
 {		
 	if (!_gameOver)
 	{
-		_remainingTime = _levelTime - _timer.GetElapsed() + _bonusTime;
+		_remainingTime = _levelTime - (int)_timer.GetElapsed() + _bonusTime;
 		_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_remainingTime) + " seconds";
 		_instructionText.setString(_instructionString);
 		_scoreString = "Score: " + std::to_string(_score);
@@ -84,7 +84,7 @@ void Game::Update(float dt)
 	}
 }
 
-void Game::Draw(sf::RenderWindow * wnd)
+void GameState::Draw(sf::RenderWindow * wnd)
 {	
 	wnd->draw(_instructionText);
 	DrawGridOutline(wnd);
@@ -100,17 +100,17 @@ void Game::Draw(sf::RenderWindow * wnd)
 	wnd->draw(_scoreText);
 }
 
-void Game::Input(sf::Event event)
+void GameState::Input(sf::Event event)
 {
-	float x;
-	float y;
+	int x;
+	int y;
 	if (event.type == sf::Event::MouseButtonPressed)
 	{
 		x = event.mouseButton.x;
 		y = event.mouseButton.y;
 		for (auto& c : _grid)
 		{
-			if (c->GetBox().contains(x, y))
+			if (c->GetBox().contains((float)x, (float)y))
 			{
 				c->Click();
 				_numCellsSelected++;
@@ -183,7 +183,7 @@ void Game::Input(sf::Event event)
 	
 }
 
-void Game::PopulateGrid(int numWords)
+void GameState::PopulateGrid(int numWords)
 {
 	int numWordsAdded = 0;
 	//increase 50 random words if necessary
@@ -219,7 +219,7 @@ void Game::PopulateGrid(int numWords)
 
 //try the word starting in three different cells in three random directions
 //if doesnt fit - return false
-bool Game::AddWordToGrid(const std::string& word)
+bool GameState::AddWordToGrid(const std::string& word)
 {
 	int numTries = 0;
 	int startIndex;
@@ -256,7 +256,7 @@ bool Game::AddWordToGrid(const std::string& word)
 }
 
 //return the indices of the cells that the word will span, includes the start index
-std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, size_t wordLength)
+std::vector<int> GameState::GetCellIndices(WordDirection wordDir, int startIndex, size_t wordLength)
 {
 	std::vector<int> cellIndices;
 	int startRow = startIndex / 16;
@@ -266,14 +266,14 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 	case WordDirection::DOWN:
 		if (startRow + wordLength <= 16)
 		{
-			for (int i = startIndex; i <= startIndex + (wordLength - 1) * 16; i += 16)
+			for (int i = startIndex; i <= startIndex + ((int)wordLength - 1) * 16; i += 16)
 			{
 				cellIndices.push_back(i);
 			}
 		}
 		break;
 	case WordDirection::UP:
-		if (startRow + 1 >= wordLength)
+		if (startRow + 1 >= (int)wordLength)
 		{
 			int j = startIndex - ((int)wordLength - 1) * 16;
 			for (int i = startIndex; i >= j; i -= 16)
@@ -283,7 +283,7 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 		}
 		break;
 	case WordDirection::LEFT:
-		if (startCol + 1 >= wordLength)
+		if (startCol + 1 >= (int)wordLength)
 		{
 			int j = startIndex;
 			for (size_t i = 0; i < wordLength; i++)
@@ -293,7 +293,7 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 		}
 		break;
 	case WordDirection::RIGHT:
-		if (wordLength <= 16 - startCol)
+		if ((int)wordLength <= 16 - startCol)
 		{
 			for (size_t i = startIndex; i < startIndex + wordLength;)
 			{
@@ -302,7 +302,7 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 		}
 		break;
 	case WordDirection::NE:
-		if (wordLength <= 16 - startCol && startRow + 1 >= wordLength)
+		if ((int)wordLength <= 16 - startCol && startRow + 1 >= (int)wordLength)
 		{
 			int j = startIndex - (wordLength - 1) * 15;
 			for (int i = startIndex; i >= j; i -= 15)
@@ -312,7 +312,7 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 		}
 		break;
 	case WordDirection::NW:
-		if (startCol + 1 >= wordLength && startRow + 1 >= wordLength)
+		if (startCol + 1 >= (int)wordLength && startRow + 1 >= (int)wordLength)
 		{
 			int j = startIndex - (wordLength - 1) * 17;
 			for (int i = startIndex; i >= j; i -= 17)
@@ -322,7 +322,7 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 		}
 		break;
 	case WordDirection::SW:
-		if (startCol + 1 >= wordLength && startRow + wordLength <= 16)
+		if (startCol + 1 >= (int)wordLength && startRow + (int)wordLength <= 16)
 		{
 			int j = startIndex + (wordLength - 1) * 15;
 			for (int i = startIndex; i <= j; i += 15)
@@ -332,7 +332,7 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 		}
 		break;
 	case WordDirection::SE:
-		if (wordLength <= 16 - startCol && startRow + wordLength <= 16)
+		if ((int)wordLength <= 16 - startCol && startRow + wordLength <= 16)
 		{
 			int j = startIndex + (wordLength - 1) * 17;
 			for (int i = startIndex; i <= j; i += 17)
@@ -346,7 +346,7 @@ std::vector<int> Game::GetCellIndices(WordDirection wordDir, int startIndex, siz
 	return cellIndices;
 }
 
-bool Game::IndicesAreValid(const std::vector<int>& cellIndices, const std::string& word)
+bool GameState::IndicesAreValid(const std::vector<int>& cellIndices, const std::string& word)
 {
 	auto wordIt = word.cbegin();
 	for (auto it = cellIndices.cbegin(); it != cellIndices.cend(); ++it, ++wordIt)
@@ -368,7 +368,7 @@ bool Game::IndicesAreValid(const std::vector<int>& cellIndices, const std::strin
 }
 
 //removes hash characters from word
-std::string Game::RemoveHashes(const std::string& word)
+std::string GameState::RemoveHashes(const std::string& word)
 {
 	std::string theWord = word;
 	size_t pos = theWord.find('#');
@@ -379,14 +379,14 @@ std::string Game::RemoveHashes(const std::string& word)
 	return theWord;
 }
 
-std::string Game::ReplaceHashWithSpace(const std::string& word)
+std::string GameState::ReplaceHashWithSpace(const std::string& word)
 {
 	std::string newWord = word;
 	std::replace(newWord.begin(), newWord.end(), '#', ' ');
 	return newWord;
 }
 
-void Game::CreateInstructionText()
+void GameState::CreateInstructionText()
 {
 	_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_levelTime) + " seconds";
 	_instructionText = sf::Text(_instructionString, Resources::GetFont("CNB"), 30);
@@ -394,7 +394,7 @@ void Game::CreateInstructionText()
 	_instructionText.setColor(sf::Color::Green);
 }
 
-void Game::CreateScoreText()
+void GameState::CreateScoreText()
 {
 	_scoreString = "Score: " + std::to_string(_score);
 	_scoreText = sf::Text(_scoreString, Resources::GetFont("CNB"), 30);
@@ -402,7 +402,7 @@ void Game::CreateScoreText()
 	_scoreText.setColor(sf::Color::Black);
 }
 
-void Game::ShowHints()
+void GameState::ShowHints()
 {
 
 	_hintText = sf::Text("Hints", Resources::GetFont("CNB"), 30);
@@ -443,7 +443,7 @@ void Game::ShowHints()
 	}
 }
 
-void Game::DrawGridOutline(sf::RenderWindow* wnd)
+void GameState::DrawGridOutline(sf::RenderWindow* wnd)
 {
 	for (auto& o : _outlineSides)
 	{
@@ -451,7 +451,7 @@ void Game::DrawGridOutline(sf::RenderWindow* wnd)
 	}
 }
 
-void Game::SetUpGridOutline()
+void GameState::SetUpGridOutline()
 {
 	float length = 16 * Constants::CELLSIZE + 10;
 	float x = _firstCellX - 5;
@@ -472,7 +472,7 @@ void Game::SetUpGridOutline()
 	}
 }
 
-bool Game::GuessCandidate(int index1, int index2)
+bool GameState::GuessCandidate(int index1, int index2)
 {
 	int row1 = index1 / 16;
 	int row2 = index2 / 16;
@@ -482,7 +482,7 @@ bool Game::GuessCandidate(int index1, int index2)
 	return (std::abs(row1 - row2) == std::abs(col1 - col2)) || (row1 == row2) || (col1 == col2);
 }
 
-void Game::InterpolateAndSelect(int index1, int index2)
+void GameState::InterpolateAndSelect(int index1, int index2)
 {
 	int row1 = index1 / 16;
 	int row2 = index2 / 16;
@@ -562,61 +562,4 @@ void Game::InterpolateAndSelect(int index1, int index2)
 	}
 }
 
-Cell::Cell(int index, sf::Vector2f pos)
-	:
-	_index(index),
-	_position(pos)
-{
-	sf::Vector2f size(Constants::CELLSIZE, Constants::CELLSIZE);
-	_boundingBox = sf::Rect<float>(pos, size);
-	_rectShape = sf::RectangleShape(size);
-	_rectShape.setFillColor(sf::Color::Red);
-	_rectShape.setPosition(pos);
 
-	//temp initialise to -
-	_letter = '-';
-	CreateLetter();
-}
-
-Cell::~Cell()
-{
-	
-}
-
-void Cell::SetLetter(char letter)
-{
-	_letter = letter;
-	_letterText.setString(_letter);
-}
-
-void Cell::Update(float dt)
-{
-	if (_found && !_selected) 
-	{		
-		_rectShape.setFillColor(sf::Color(0, 255, 0,126));
-	}
-	else if ((_found && _selected) || (_selected && !_found))
-	{
-		_rectShape.setFillColor(sf::Color(0, 0, 255, 200));
-	}
-	else
-	{
-		_rectShape.setFillColor(sf::Color::White);
-	}
-}
-
-void Cell::Draw(sf::RenderWindow * wnd)
-{
-	wnd->draw(_rectShape);
-	wnd->draw(_letterText);
-}
-
-void Cell::CreateLetter()
-{	
-	_letterText = sf::Text(_letter, Resources::GetFont("CNB"), 20);
-	float newX = _position.x + _letterText.getGlobalBounds().width;
-	float newY = _position.y + _letterText.getGlobalBounds().height / 2;
-	sf::Vector2f newPos(newX, newY);
-	_letterText.setPosition(newPos);
-	_letterText.setFillColor(sf::Color::Black);
-}

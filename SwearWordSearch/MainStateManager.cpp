@@ -2,7 +2,7 @@
 
 MainStateManager::MainStateManager()
 {
-	_currentState = std::make_unique<Game>(Difficulty::EASY);
+	_currentState = std::make_unique<GameState>(Difficulty::EASY);
 	_currentState->AddObserver(this);
 }
 
@@ -35,7 +35,7 @@ void MainStateManager::ChangeState(MainStates nextState)
 	switch (nextState)
 	{
 	case MainStates::GAME_OVER:
-		Game* g = (Game*)_currentState.get();
+		GameState* g = (GameState*)_currentState.get();
 		int score = g->GetScore();
 		_currentState = std::make_unique<GameOverState>(score);
 		_currentState->AddObserver(this);

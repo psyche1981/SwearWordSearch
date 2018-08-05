@@ -4,7 +4,7 @@
 
 #include "Resources.h"
 #include "MainState.h"
-#include "Game.h"
+#include "GameState.h"
 #include "GameOverState.h"
 #include "Observer.h"
 

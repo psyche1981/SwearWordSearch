@@ -78,7 +78,7 @@ const std::vector<std::string>& Resources::GetWords(int n)
 	}
 	else
 	{
-		while (words.size() < n)
+		while ((int)words.size() < n)
 		{
 			num = Random::GetRandomInt(0, Resources::GetNumWords() - 1);
 			if (!PreviouslySelected(prevNums, num))
@@ -115,7 +115,7 @@ bool Resources::PreviouslySelected(std::vector<int>& prev, int n)
 
 void Random::Seed()
 {
-	_randomEngine = std::mt19937(time(nullptr));
+	_randomEngine = std::mt19937((unsigned int)time(nullptr));
 }
 
 int Random::GetRandomInt(int lowerBound, int upperBound)
