@@ -143,9 +143,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverState.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Observer.cpp" />
     <ClCompile Include="Resources.cpp" />
-    <ClCompile Include="StateManager.cpp" />
+    <ClCompile Include="MainStateManager.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,9 +155,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOverState.h" />
+    <ClInclude Include="Observer.h" />
     <ClInclude Include="Resources.h" />
-    <ClInclude Include="State.h" />
-    <ClInclude Include="StateManager.h" />
+    <ClInclude Include="MainState.h" />
+    <ClInclude Include="MainStateManager.h" />
     <ClInclude Include="Timer.h" />
   </ItemGroup>
   <ItemGroup>

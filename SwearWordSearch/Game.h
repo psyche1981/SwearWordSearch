@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "State.h"
+#include "MainState.h"
 #include "Resources.h"
 #include "Timer.h"
 
@@ -42,17 +42,17 @@ private:
 	void CreateLetter();
 };
 
-class Game : public State
+class Game : public MainState
 {
 public:
-	Game(StateManager* sm, Difficulty diff);
+	Game(Difficulty diff);
 	virtual ~Game();
 
-	void Update(float dt);
-	void Draw(sf::RenderWindow* wnd);
-	void Input(sf::Event event);
+	void Update(float dt) override;
+	void Draw(sf::RenderWindow* wnd) override;
+	void Input(sf::Event event) override;
 
-	
+	const int GetScore() const { return _score; }
 
 private:
 	std::vector<std::unique_ptr<Cell>> _grid;

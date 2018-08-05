@@ -1,8 +1,7 @@
 #include "Game.h"
 
-Game::Game(StateManager* sm, Difficulty diff)
+Game::Game(Difficulty diff)
 	:
-	State(sm),
 	_difficulty(diff)
 {
 	_numWordsToFind = 4;
@@ -35,7 +34,7 @@ Game::Game(StateManager* sm, Difficulty diff)
 
 Game::~Game()
 {
-	
+	std::cout << "Game Destroyed" << std::endl;
 }
 
 void Game::Update(float dt)
@@ -71,17 +70,17 @@ void Game::Update(float dt)
 			_bonusTime = 0;
 			_timer.End();
 
-
 			//TODO: load next level
+
 		}
 	}	
 	else
 	{
 		_update = false;
-		_instructionString = "Game Over. You Scored " + std::to_string(_score);
-		_instructionText.setString(_instructionString);
 
 		//TODO: go to game over state
+		_nextState = MainStates::GAME_OVER;
+		NotifyObservers();
 	}
 }
 

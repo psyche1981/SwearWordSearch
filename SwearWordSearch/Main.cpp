@@ -2,7 +2,7 @@
 #include <chrono>
 #include <SFML\Graphics.hpp>
 
-#include "StateManager.h"
+#include "MainStateManager.h"
 #include "Resources.h"
 
 class Window
@@ -11,7 +11,7 @@ public:
 	Window(int width, int height, const std::string& title)
 		:
 		_window(sf::VideoMode(width, height), title),
-		_sm()
+		_msm()
 	{		
 	}
 
@@ -30,7 +30,7 @@ public:
 				if (event.type == sf::Event::Closed)
 					_window.close();
 
-				_sm.Input(event);
+				_msm.Input(event);
 			}
 
 			float dt;
@@ -42,9 +42,9 @@ public:
 
 			_window.clear(sf::Color::White);
 
-			_sm.Update(dt);
+			_msm.Update(dt);
 
-			_sm.Draw(&_window);
+			_msm.Draw(&_window);
 
 			_window.display();
 		}
@@ -52,7 +52,7 @@ public:
 
 private:
 	sf::RenderWindow _window;
-	StateManager  _sm;
+	MainStateManager  _msm;
 };
 
 

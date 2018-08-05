@@ -17,6 +17,20 @@ namespace Constants
 	static constexpr int BONUSTIME = 2;
 }
 
+enum MainStates
+{
+	INITIAL_SPLASH,
+	MENU,
+	TUTORIAL,
+	GAME,
+	GAME_OVER,
+	PAUSE,
+	QUIT,
+
+	MAINSTATES_DEFAULT
+};
+
+
 enum Difficulty
 {
 	EASY,
@@ -36,16 +50,6 @@ enum WordDirection
 	SW,
 
 	SIZE
-};
-
-enum States
-{
-	SPLASH,
-	TITLE,
-	GAME,
-	GAMEOVER,
-	PAUSE,
-	MENU
 };
 
 class Resources
