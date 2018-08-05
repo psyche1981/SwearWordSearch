@@ -5,7 +5,7 @@ MainMenuState::MainMenuState()
 	_subState(SubState::MAIN)
 {
 	std::cout << "MEnu Created" << std::endl;
-	CreateMainState();	
+	CreateMainSubstate();	
 }
 
 MainMenuState::~MainMenuState()
@@ -44,7 +44,7 @@ void MainMenuState::Input(sf::Event event)
 				NotifyObservers();
 			}
 			else if (_menuTexts[1].getGlobalBounds().contains(x, y))
-			{
+			{				
 				_nextState = MainStates::TUTORIAL;
 				NotifyObservers();
 			}
@@ -53,7 +53,12 @@ void MainMenuState::Input(sf::Event event)
 	}
 }
 
-void MainMenuState::CreateMainState()
+void MainMenuState::ChangeSubstate(SubState nextSubstate)
+{
+	_subState = nextSubstate;
+}
+
+void MainMenuState::CreateMainSubstate()
 {
 	_titleText = sf::Text("(SWEAR)WORDSEARCH", Resources::GetFont("CNB"), 60);
 	_titleText.setColor(sf::Color::Black);

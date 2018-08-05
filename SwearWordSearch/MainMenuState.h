@@ -29,6 +29,8 @@ private:
 	sf::Text _titleText;
 	SubState _subState;
 
-	void CreateMainState();
+	void ChangeSubstate(SubState nextSubstate);
+
+	void CreateMainSubstate();
 };
 
