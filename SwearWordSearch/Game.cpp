@@ -6,7 +6,8 @@ Game::Game(StateManager* sm, Difficulty diff)
 	_difficulty(diff)
 {
 	_numWordsToFind = 4;
-	_countdownTimer = 30;
+	_levelTime = 30;
+	_remainingTime = _levelTime;
 	_timer.Begin();
 	//create the grid with indiviual cells
 	for (int i = 0; i < Constants::NUMCELLS; i++)
@@ -17,58 +18,13 @@ Game::Game(StateManager* sm, Difficulty diff)
 		_grid.emplace_back(std::make_unique<Cell>(i, pos));
 	}
 
-	//create instruction text
-	_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_countdownTimer) + " seconds";
-	_instructionText = sf::Text(_instructionString, Resources::GetFont("CNB"), 30);
-	_instructionText.setPosition(30.0f, 5.0f);
-	_instructionText.setColor(sf::Color::Green);
-
-	//create score text
-	_scoreString = "Score: " + std::to_string(_score);
-	_scoreText = sf::Text(_scoreString, Resources::GetFont("CNB"), 30);
-	_scoreText.setPosition(590.0f, 500.0f);
-	_scoreText.setColor(sf::Color::Black);
+	CreateInstructionText();
+	CreateScoreText();
 	
 	SetUpGridOutline();
 	PopulateGrid(30);
 
-	//show hints of words in grid
-	_hintText = sf::Text("Hints", Resources::GetFont("CNB"), 30);
-	_hintText.setPosition(610.0f, 80.0f);
-	_hintText.setColor(sf::Color::Black);
-	if (_difficulty == Difficulty::EASY)
-	{
-		//set word value
-		_wordValue = 10;
-		//show all words in grid
-		for (size_t i = 0; i < _words.size() / 2; i++)
-		{
-			_wordSfTexts.emplace_back(_words[i], Resources::GetFont("CNB"), 20);
-			_wordSfTexts[i].setPosition(600.0f, 120.0f + i * 20);
-			_wordSfTexts[i].setColor(sf::Color::Black);
-		}
-	}
-	else if (_difficulty == Difficulty::INTERMEDIATE)
-	{
-		//set word value
-		_wordValue = 20;
-		//small amount of words shown		
-		for (int i = 0; i < _words.size() / 8; i++)
-		{
-			_wordSfTexts.emplace_back(_words[i], Resources::GetFont("CNB"), 20);
-			_wordSfTexts[i].setPosition(600.0f, 110.0f + i * 20);
-			_wordSfTexts[i].setColor(sf::Color::Black);
-		}
-	}
-	else
-	{
-		//set word value
-		_wordValue = 30;
-		//no words shown on hard
-		_wordSfTexts.emplace_back("No hints on \nhard mode", Resources::GetFont("CNB"), 20);
-		_wordSfTexts[0].setPosition(600.0f, 120.0f);
-		_wordSfTexts[0].setColor(sf::Color::Black);
-	}
+	ShowHints();
 
 	//temp: show location of words
 	for (size_t i = 0; i < _wordIndices.size(); i++)
@@ -83,21 +39,22 @@ Game::~Game()
 }
 
 void Game::Update(float dt)
-{	
-	int timeRemaining = (int)(_countdownTimer - _timer.GetElapsed());
+{		
 	if (!_gameOver)
 	{
-		_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(timeRemaining) + " seconds";
+		_remainingTime = _levelTime - _timer.GetElapsed() + _bonusTime;
+		_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_remainingTime) + " seconds";
 		_instructionText.setString(_instructionString);
 		_scoreString = "Score: " + std::to_string(_score);
 		_scoreText.setString(_scoreString);
 
-		if (timeRemaining <= 0)
+		if (_remainingTime <= 0)
 		{
 			_gameOver = true;
 			_update = false;
 			_timer.End();
-			timeRemaining = 0;
+			_bonusTime = 0;
+			_remainingTime = 0;
 		}
 		if (_update)
 		{
@@ -111,6 +68,7 @@ void Game::Update(float dt)
 			_instructionString = "Level Completed. You Scored " + std::to_string(_score);
 			_instructionText.setString(_instructionString);
 			_update = false;
+			_bonusTime = 0;
 			_timer.End();
 
 
@@ -193,6 +151,7 @@ void Game::Input(sf::Event event)
 									_prevSelectedCellIndex = -1;
 									_foundWords.push_back(_words[i]);
 									_score += _wordValue;
+									_bonusTime += Constants::BONUSTIME;
 									_numWordsToFind--;
 									if (_numWordsToFind == 0)
 									{
@@ -426,6 +385,63 @@ std::string Game::ReplaceHashWithSpace(const std::string& word)
 	std::string newWord = word;
 	std::replace(newWord.begin(), newWord.end(), '#', ' ');
 	return newWord;
+}
+
+void Game::CreateInstructionText()
+{
+	_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_levelTime) + " seconds";
+	_instructionText = sf::Text(_instructionString, Resources::GetFont("CNB"), 30);
+	_instructionText.setPosition(30.0f, 5.0f);
+	_instructionText.setColor(sf::Color::Green);
+}
+
+void Game::CreateScoreText()
+{
+	_scoreString = "Score: " + std::to_string(_score);
+	_scoreText = sf::Text(_scoreString, Resources::GetFont("CNB"), 30);
+	_scoreText.setPosition(590.0f, 500.0f);
+	_scoreText.setColor(sf::Color::Black);
+}
+
+void Game::ShowHints()
+{
+
+	_hintText = sf::Text("Hints", Resources::GetFont("CNB"), 30);
+	_hintText.setPosition(610.0f, 80.0f);
+	_hintText.setColor(sf::Color::Black);
+	if (_difficulty == Difficulty::EASY)
+	{
+		//set word value
+		_wordValue = 10;
+		//show all words in grid
+		for (size_t i = 0; i < _words.size() / 2; i++)
+		{
+			_wordSfTexts.emplace_back(_words[i], Resources::GetFont("CNB"), 20);
+			_wordSfTexts[i].setPosition(600.0f, 120.0f + i * 20);
+			_wordSfTexts[i].setColor(sf::Color::Black);
+		}
+	}
+	else if (_difficulty == Difficulty::INTERMEDIATE)
+	{
+		//set word value
+		_wordValue = 20;
+		//small amount of words shown		
+		for (int i = 0; i < _words.size() / 8; i++)
+		{
+			_wordSfTexts.emplace_back(_words[i], Resources::GetFont("CNB"), 20);
+			_wordSfTexts[i].setPosition(600.0f, 110.0f + i * 20);
+			_wordSfTexts[i].setColor(sf::Color::Black);
+		}
+	}
+	else
+	{
+		//set word value
+		_wordValue = 30;
+		//no words shown on hard
+		_wordSfTexts.emplace_back("No hints on \nhard mode", Resources::GetFont("CNB"), 20);
+		_wordSfTexts[0].setPosition(600.0f, 120.0f);
+		_wordSfTexts[0].setColor(sf::Color::Black);
+	}
 }
 
 void Game::DrawGridOutline(sf::RenderWindow* wnd)

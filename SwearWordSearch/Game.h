@@ -62,7 +62,9 @@ private:
 
 	Timer _timer;
 
-
+	void CreateInstructionText();
+	void CreateScoreText();
+	void ShowHints();
 	void DrawGridOutline(sf::RenderWindow* wnd);
 	void SetUpGridOutline();
 	bool GuessCandidate(int index1, int index2);
@@ -78,7 +80,9 @@ private:
 	int _numWordsToFind;
 	int _wordValue;
 	int _score = 0;
-	int _countdownTimer;
+	int _levelTime;
+	int _remainingTime;
+	int _bonusTime = 0;
 	bool _levelCompleted = false;
 	bool _gameOver = false;
 	bool _update = true;

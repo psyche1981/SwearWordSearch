@@ -14,6 +14,7 @@ namespace Constants
 	static constexpr int SCREENWIDTH = 800;
 	static constexpr int SCREENHEIGHT = 600;
 	static constexpr float CELLSIZE = 30.0f;
+	static constexpr int BONUSTIME = 2;
 }
 
 enum Difficulty

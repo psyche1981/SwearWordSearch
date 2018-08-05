@@ -27,6 +27,12 @@ float Timer::End()
 	return GetElapsed();
 }
 
+void Timer::Reset()
+{
+	End();
+	Begin();
+}
+
 float Timer::GetElapsed()
 {	
 	if (!_ended)

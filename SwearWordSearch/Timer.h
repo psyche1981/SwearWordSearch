@@ -11,6 +11,7 @@ public:
 	
 	void Begin();
 	float End();
+	void Reset();
 
 	float GetElapsed();
 
