@@ -65,7 +65,6 @@ void MainMenuState::Input(sf::Event event)
 		{
 			if (_diffTexts[0].getGlobalBounds().contains(x, y))
 			{
-				std::cout << "Hello" << std::endl;
 				_nextState = MainStates::GAME;
 				_selectedDifficulty = Difficulty::EASY;
 				NotifyObservers();
