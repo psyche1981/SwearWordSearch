@@ -24,13 +24,28 @@ public:
 	void Draw(sf::RenderWindow* wnd) override;
 	void Input(sf::Event event) override;
 
-private:
-	std::vector<sf::Text> _menuTexts;
-	sf::Text _titleText;
-	SubState _subState;
+	const Difficulty GetSelectedDifficulty() const { return _selectedDifficulty; }
 
-	void ChangeSubstate(SubState nextSubstate);
+private:
+	//common in all substates
+	sf::Text _titleText;
+
+	//main substate stuff
+	std::vector<sf::Text> _mainTexts;	
+
+	//difficulty substate stuff
+	std::vector<sf::Text> _diffTexts;
+
+	//mode substate stuff
+	
 
 	void CreateMainSubstate();
+	void CreateDifficultySubstate();
+	void CreateModeSubstate();
+
+	void ChangeSubstate(SubState nextSubstate);
+	SubState _subState;
+
+	Difficulty _selectedDifficulty;
 };
 

@@ -35,9 +35,12 @@ void MainStateManager::ChangeState(MainStates nextState)
 	switch (nextState)
 	{
 	case MainStates::GAME:
-		//TODO: pass in difficulty from menu - user selected
-		_currentState = std::make_unique<GameState>(Difficulty::EASY);
-		_currentState->AddObserver(this);
+		{
+			MainMenuState* m = (MainMenuState*)_currentState.get();
+			Difficulty d = m->GetSelectedDifficulty();
+			_currentState = std::make_unique<GameState>(d);
+			_currentState->AddObserver(this);
+		}		
 		break;
 	case MainStates::GAME_OVER:
 		{
