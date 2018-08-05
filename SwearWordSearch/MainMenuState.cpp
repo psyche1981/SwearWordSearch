@@ -1,21 +1,11 @@
 #include "MainMenuState.h"
 
 MainMenuState::MainMenuState()
+	:
+	_subState(SubState::MAIN)
 {
 	std::cout << "MEnu Created" << std::endl;
-
-	_titleText = sf::Text("(SWEAR)WORDSEARCH", Resources::GetFont("CNB"), 60);
-	_titleText.setColor(sf::Color::Black);
-	_titleText.setPosition(100.0f, 100.0f);
-
-	//TODO: menu item factory function instead of hard coded
-	_menuTexts.emplace_back("PLAY", Resources::GetFont("CNB"), 30);
-	_menuTexts.emplace_back("TUTORIAL", Resources::GetFont("CNB"), 30);
-
-	_menuTexts[0].setPosition(350.0f, 300.0f);
-	_menuTexts[0].setColor(sf::Color::Blue);
-	_menuTexts[1].setPosition(350.0f, 350.0f);
-	_menuTexts[1].setColor(sf::Color::Blue);
+	CreateMainState();	
 }
 
 MainMenuState::~MainMenuState()
@@ -29,11 +19,14 @@ void MainMenuState::Update(float dt)
 
 void MainMenuState::Draw(sf::RenderWindow* wnd)
 {
-	wnd->draw(_titleText);
-	for (auto& t : _menuTexts)
+	if (_subState == SubState::MAIN)
 	{
-		wnd->draw(t);
-	}
+		wnd->draw(_titleText);
+		for (auto& t : _menuTexts)
+		{
+			wnd->draw(t);
+		}
+	}	
 }
 
 void MainMenuState::Input(sf::Event event)
@@ -43,15 +36,35 @@ void MainMenuState::Input(sf::Event event)
 	{
 		float x = event.mouseButton.x;
 		float y = event.mouseButton.y;
-		if (_menuTexts[0].getGlobalBounds().contains(x, y))
+		if (_subState == SubState::MAIN)
 		{
-			_nextState = MainStates::GAME;
-			NotifyObservers();
+			if (_menuTexts[0].getGlobalBounds().contains(x, y))
+			{
+				_nextState = MainStates::GAME;
+				NotifyObservers();
+			}
+			else if (_menuTexts[1].getGlobalBounds().contains(x, y))
+			{
+				_nextState = MainStates::TUTORIAL;
+				NotifyObservers();
+			}
 		}
-		else if (_menuTexts[1].getGlobalBounds().contains(x, y))
-		{
-			_nextState = MainStates::TUTORIAL;
-			NotifyObservers();
-		}
+		
 	}
+}
+
+void MainMenuState::CreateMainState()
+{
+	_titleText = sf::Text("(SWEAR)WORDSEARCH", Resources::GetFont("CNB"), 60);
+	_titleText.setColor(sf::Color::Black);
+	_titleText.setPosition(100.0f, 100.0f);
+
+	//TODO: menu item factory function instead of hard coded
+	_menuTexts.emplace_back("PLAY", Resources::GetFont("CNB"), 30);
+	_menuTexts.emplace_back("TUTORIAL", Resources::GetFont("CNB"), 30);
+
+	_menuTexts[0].setPosition(350.0f, 300.0f);
+	_menuTexts[0].setColor(sf::Color::Blue);
+	_menuTexts[1].setPosition(350.0f, 350.0f);
+	_menuTexts[1].setColor(sf::Color::Blue);
 }

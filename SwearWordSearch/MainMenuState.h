@@ -8,6 +8,15 @@
 class MainMenuState : public MainState
 {
 public:
+	enum SubState
+	{
+		MAIN,
+		DIFFICULTY_SELECT,
+		MODE_SELECT
+	};
+
+
+public:
 	MainMenuState();
 	virtual ~MainMenuState();
 
@@ -18,5 +27,8 @@ public:
 private:
 	std::vector<sf::Text> _menuTexts;
 	sf::Text _titleText;
+	SubState _subState;
+
+	void CreateMainState();
 };
 
