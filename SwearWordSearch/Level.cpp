@@ -10,11 +10,11 @@ Level::Level(GameMode mode, Difficulty diff, int levelNumber)
 	switch (_difficulty)
 	{
 	case Difficulty::EASY:
-		_bonusTime = 5;
+		_bonusTime = 3;
 		_wordValue = 10;
 		break;
 	case Difficulty::INTERMEDIATE:
-		_bonusTime = 2;
+		_bonusTime = 1;
 		_wordValue = 12;
 		break;
 	case Difficulty::HARD:
@@ -22,14 +22,22 @@ Level::Level(GameMode mode, Difficulty diff, int levelNumber)
 		_wordValue = 15;
 		break;
 	default:
-		_bonusTime = 5;
+		_bonusTime = 3;
 		_wordValue = 10;
 	}
 	//TODO: get level config from resources
 
 	//temp to get it working
 	_levelTime = 30;
-	_numWordsToFind = 1;
+	if (_levelNumber <= 30)
+	{
+		_numWordsToFind = _levelNumber;
+	}
+	else
+	{
+		_numWordsToFind = 30;
+	}
+	
 
 }
 

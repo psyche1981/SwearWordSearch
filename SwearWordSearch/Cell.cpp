@@ -49,6 +49,13 @@ void Cell::Draw(sf::RenderWindow * wnd)
 	wnd->draw(_letterText);
 }
 
+void Cell::Reset()
+{
+	_selected = false;
+	_found = false;
+	SetLetter('-');
+}
+
 void Cell::CreateLetter()
 {
 	_letterText = sf::Text(_letter, Resources::GetFont("CNB"), 20);

@@ -21,6 +21,7 @@ public:
 
 	void Deselect() { _selected = false; }
 	void Select() { _selected = true; }
+	void Reset();
 
 	const bool IsSelected() { return _selected; }
 	void Found() { _found = true; }

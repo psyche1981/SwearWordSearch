@@ -2,13 +2,12 @@
 
 GameState::GameState(Difficulty diff)
 	:
-	_difficulty(diff)
+	_difficulty(diff),
+	_levelNumber(1)
 {
-	_level = std::make_unique<Level>(GameMode::AGAINST_THE_CLOCK, _difficulty, 1);
-	_numWordsToFind = _level->GetNumWordsToFind();
-	_levelTime = _level->GetLevelTime();
-	_remainingTime = _levelTime;
-	_timer.Begin();
+	_hintText = sf::Text("Hints", Resources::GetFont("CNB"), 30);
+	_hintText.setPosition(610.0f, 80.0f);
+	_hintText.setColor(sf::Color::Black);
 	//create the grid with indiviual cells
 	for (int i = 0; i < Constants::NUMCELLS; i++)
 	{
@@ -23,15 +22,8 @@ GameState::GameState(Difficulty diff)
 	CreateQuitText();
 	
 	SetUpGridOutline();
-	PopulateGrid(30);
+	CreateLevel(_levelNumber);
 
-	ShowHints();
-
-	//temp: show location of words
-	for (size_t i = 0; i < _wordIndices.size(); i++)
-	{
-		std::cout << _words[i] << " is at " << "(" << _wordIndices[i].first << ", " << _wordIndices[i].second << ")" << std::endl;
-	}
 }
 
 GameState::~GameState()
@@ -66,14 +58,13 @@ void GameState::Update(float dt)
 		}
 		if (_levelCompleted)
 		{
+			//temp need beeter way to show level completed
 			_instructionString = "Level Completed. You Scored " + std::to_string(_score);
 			_instructionText.setString(_instructionString);
+
 			_update = false;
 			_bonusTime = 0;
-			_timer.End();
-
-			//TODO: load next level
-
+			_timer.End();		
 		}
 	}	
 	else
@@ -111,82 +102,91 @@ void GameState::Input(sf::Event event)
 	{
 		x = event.mouseButton.x;
 		y = event.mouseButton.y;
-		for (auto& c : _grid)
+		if (!_levelCompleted)
 		{
-			if (c->GetBox().contains((float)x, (float)y))
+			for (auto& c : _grid)
 			{
-				c->Click();
-				_numCellsSelected++;
-				if (_numCellsSelected == 1)
+				if (c->GetBox().contains((float)x, (float)y))
 				{
-					_prevSelectedCellIndex = c->GetIndex();
-				}
-				else if (_numCellsSelected == 2)
-				{
-					int i2 = c->GetIndex();
-					int i1 = _prevSelectedCellIndex;
-					if (i1 == i2)
+					c->Click();
+					_numCellsSelected++;
+					if (_numCellsSelected == 1)
 					{
-						_numCellsSelected = 0;
+						_prevSelectedCellIndex = c->GetIndex();
 					}
-					else
+					else if (_numCellsSelected == 2)
 					{
-						if (GuessCandidate(i1, i2))
+						int i2 = c->GetIndex();
+						int i1 = _prevSelectedCellIndex;
+						if (i1 == i2)
 						{
-							InterpolateAndSelect(i1, i2);
-							_selection = std::make_pair(i1, i2);
-							//check the word indices against the selection indices
-							for (size_t i = 0; i < _wordIndices.size(); i++)
-							{
-								if ((_selection.first == _wordIndices[i].first && _selection.second == _wordIndices[i].second)
-									|| (_selection.first == _wordIndices[i].second && _selection.second == _wordIndices[i].first))
-								{//found a word
-									for (auto& c : _grid)
-									{
-										if (c->IsSelected())
-										{
-											c->Found();
-											c->Deselect();
-										}
-									}
-									_numCellsSelected = 0;
-									_prevSelectedCellIndex = -1;
-									_foundWords.push_back(_words[i]);
-									_score += _level->GetWordValue();
-									_bonusTime += _level->GetBonusTime();
-									_numWordsToFind--;
-									if (_numWordsToFind == 0)
-									{
-										_levelCompleted = true;
-									}
-								}
-							}
+							_numCellsSelected = 0;
 						}
 						else
 						{
-							_grid[i1]->Deselect();
-							_grid[i2]->Deselect();
-							_numCellsSelected = 0;
-							_prevSelectedCellIndex = -1;
+							if (GuessCandidate(i1, i2))
+							{
+								InterpolateAndSelect(i1, i2);
+								_selection = std::make_pair(i1, i2);
+								//check the word indices against the selection indices
+								for (size_t i = 0; i < _wordIndices.size(); i++)
+								{
+									if ((_selection.first == _wordIndices[i].first && _selection.second == _wordIndices[i].second)
+										|| (_selection.first == _wordIndices[i].second && _selection.second == _wordIndices[i].first))
+									{//found a word
+										for (auto& c : _grid)
+										{
+											if (c->IsSelected())
+											{
+												c->Found();
+												c->Deselect();
+											}
+										}
+										_numCellsSelected = 0;
+										_prevSelectedCellIndex = -1;
+										_score += _level->GetWordValue();
+										_bonusTime += _level->GetBonusTime();
+										_numWordsToFind--;
+										if (_numWordsToFind == 0)
+										{
+											_levelCompleted = true;
+											_levelNumber++;
+										}
+									}
+								}
+							}
+							else
+							{
+								_grid[i1]->Deselect();
+								_grid[i2]->Deselect();
+								_numCellsSelected = 0;
+								_prevSelectedCellIndex = -1;
+							}
 						}
-					}					
-				}
-				else
-				{
-					for (auto& c : _grid)
-					{
-						c->Deselect();
 					}
-					_numCellsSelected = 0;
-					_prevSelectedCellIndex = -1;
+					else
+					{
+						for (auto& c : _grid)
+						{
+							c->Deselect();
+						}
+						_numCellsSelected = 0;
+						_prevSelectedCellIndex = -1;
+					}
 				}
 			}
+			if (_quitText.getGlobalBounds().contains(x, y))
+			{
+				_nextState = MainStates::MENU;
+				NotifyObservers();
+			}
 		}
-		if (_quitText.getGlobalBounds().contains(x, y))
+		else
 		{
-			_nextState = MainStates::MENU;
-			NotifyObservers();
+			//temp - Go to next level on mouse click
+			CreateLevel(_levelNumber);
 		}
+		
 	}
 }
 
@@ -393,6 +393,42 @@ std::string GameState::ReplaceHashWithSpace(const std::string& word)
 	return newWord;
 }
 
+void GameState::ResetLevel()
+{
+	ResetGrid();
+	_numCellsSelected = 0;
+	_prevSelectedCellIndex = -1;
+	_wordIndices.clear();
+	_words.clear();
+	_wordSfTexts.clear();
+}
+
+void GameState::ResetGrid()
+{
+	for (auto& c : _grid)
+	{
+		c->Reset();
+	}
+}
+
+void GameState::CreateLevel(int levelNumber)
+{	
+	if (levelNumber != 1)
+	{
+		ResetLevel();
+	}
+	
+	PopulateGrid(30);
+	_level = std::make_unique<Level>(GameMode::AGAINST_THE_CLOCK, _difficulty, levelNumber);
+	_numWordsToFind = _level->GetNumWordsToFind();
+	_levelTime = _level->GetLevelTime();
+	_remainingTime = _levelTime;
+	_update = true;
+	_levelCompleted = false;
+	_timer.Begin();
+	ShowHints();
+}
+
 void GameState::CreateInstructionText()
 {
 	_instructionString = "Find " + std::to_string(_numWordsToFind) + " words in " + std::to_string(_levelTime) + " seconds";
@@ -417,11 +453,7 @@ void GameState::CreateQuitText()
 }
 
 void GameState::ShowHints()
-{
-
-	_hintText = sf::Text("Hints", Resources::GetFont("CNB"), 30);
-	_hintText.setPosition(610.0f, 80.0f);
-	_hintText.setColor(sf::Color::Black);
+{	
 	if (_difficulty == Difficulty::EASY)
 	{		
 		//show all words in grid

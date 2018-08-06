@@ -31,6 +31,9 @@ private:
 	std::unique_ptr<Level> _level;
 	Timer _timer;
 
+	void ResetLevel();
+	void ResetGrid();
+	void CreateLevel(int levelNumber);
 	void CreateInstructionText();
 	void CreateScoreText();
 	void CreateQuitText();
@@ -48,6 +51,7 @@ private:
 
 	std::vector<sf::RectangleShape> _outlineSides;
 	int _numWordsToFind;
+	int _levelNumber;
 	int _score = 0;
 	int _levelTime;
 	int _remainingTime;
@@ -59,8 +63,8 @@ private:
 	int _prevSelectedCellIndex = -1;
 	std::pair<int, int> _selection;
 	std::vector<std::pair<int, int>> _wordIndices;
+	//with a space
 	std::vector<std::string> _words;
-	std::vector<std::string> _foundWords;
 	sf::Text _instructionText;
 	std::string _instructionString;
 	std::vector<sf::Text> _wordSfTexts;
