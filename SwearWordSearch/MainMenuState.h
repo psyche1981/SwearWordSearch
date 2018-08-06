@@ -27,17 +27,18 @@ public:
 	const Difficulty GetSelectedDifficulty() const { return _selectedDifficulty; }
 
 private:
-	//common in all substates
-	sf::Text _titleText;
-
 	//main substate stuff
 	std::vector<sf::Text> _mainTexts;	
 
 	//difficulty substate stuff
 	std::vector<sf::Text> _diffTexts;
+	sf::Text _instructionText;
 
 	//mode substate stuff
 	
+
+	//common in all substates
+	sf::Text _titleText;
 
 	void CreateMainSubstate();
 	void CreateDifficultySubstate();

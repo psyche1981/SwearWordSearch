@@ -31,6 +31,7 @@ void MainMenuState::Draw(sf::RenderWindow* wnd)
 	}
 	else if (_subState == SubState::DIFFICULTY_SELECT)
 	{
+		wnd->draw(_instructionText);
 		for (auto& t : _diffTexts)
 		{
 			wnd->draw(t);
@@ -113,6 +114,9 @@ void MainMenuState::CreateMainSubstate()
 
 void MainMenuState::CreateDifficultySubstate()
 {
+	_instructionText = sf::Text("Select Difficulty", Resources::GetFont("CNB"), 35);
+	_instructionText.setColor(sf::Color::Black);
+	_instructionText.setPosition(250.0f, 220.0f);
 	_diffTexts.emplace_back("EASY", Resources::GetFont("CNB"), 30);
 	_diffTexts.emplace_back("INTERMEDIATE", Resources::GetFont("CNB"), 30);
 	_diffTexts.emplace_back("HARD", Resources::GetFont("CNB"), 30);
