@@ -61,6 +61,7 @@ int main()
 	Resources::LoadFonts();
 	Resources::LoadImages();
 	Resources::LoadWords();
+	Resources::LoadLevelConfigs();
 	Random::Seed();
 	Window wnd(Constants::SCREENWIDTH, Constants::SCREENHEIGHT, "Swear-WordSearch");
 	wnd.Loop();

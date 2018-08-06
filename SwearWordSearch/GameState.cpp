@@ -4,8 +4,9 @@ GameState::GameState(Difficulty diff)
 	:
 	_difficulty(diff)
 {
-	_numWordsToFind = 4;
-	_levelTime = 30;
+	_level = std::make_unique<Level>(GameMode::AGAINST_THE_CLOCK, _difficulty, 1);
+	_numWordsToFind = _level->GetNumWordsToFind();
+	_levelTime = _level->GetLevelTime();
 	_remainingTime = _levelTime;
 	_timer.Begin();
 	//create the grid with indiviual cells
@@ -151,8 +152,8 @@ void GameState::Input(sf::Event event)
 									_numCellsSelected = 0;
 									_prevSelectedCellIndex = -1;
 									_foundWords.push_back(_words[i]);
-									_score += _wordValue;
-									_bonusTime += Constants::BONUSTIME;
+									_score += _level->GetWordValue();
+									_bonusTime += _level->GetBonusTime();
 									_numWordsToFind--;
 									if (_numWordsToFind == 0)
 									{
@@ -422,9 +423,7 @@ void GameState::ShowHints()
 	_hintText.setPosition(610.0f, 80.0f);
 	_hintText.setColor(sf::Color::Black);
 	if (_difficulty == Difficulty::EASY)
-	{
-		//set word value
-		_wordValue = 10;
+	{		
 		//show all words in grid
 		for (size_t i = 0; i < _words.size() / 2; i++)
 		{
@@ -435,8 +434,6 @@ void GameState::ShowHints()
 	}
 	else if (_difficulty == Difficulty::INTERMEDIATE)
 	{
-		//set word value
-		_wordValue = 20;
 		//small amount of words shown		
 		for (int i = 0; i < _words.size() / 8; i++)
 		{
@@ -447,8 +444,6 @@ void GameState::ShowHints()
 	}
 	else
 	{
-		//set word value
-		_wordValue = 30;
 		//no words shown on hard
 		_wordSfTexts.emplace_back("No hints on \nhard mode", Resources::GetFont("CNB"), 20);
 		_wordSfTexts[0].setPosition(600.0f, 120.0f);

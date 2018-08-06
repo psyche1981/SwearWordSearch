@@ -46,6 +46,11 @@ void Resources::LoadWords()
 	}
 }
 
+void Resources::LoadLevelConfigs()
+{
+	//TODO: load file into right places
+}
+
 const sf::Font & Resources::GetFont(const std::string & name)
 {
 	return _fonts.at(name);

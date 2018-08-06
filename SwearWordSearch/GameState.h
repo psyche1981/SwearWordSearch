@@ -7,6 +7,7 @@
 #include "MainState.h"
 #include "Resources.h"
 #include "Timer.h"
+#include "Level.h"
 
 
 class GameState : public MainState
@@ -27,6 +28,7 @@ private:
 	float _firstCellY = 80.0f;
 	Difficulty _difficulty;
 
+	std::unique_ptr<Level> _level;
 	Timer _timer;
 
 	void CreateInstructionText();
@@ -46,7 +48,6 @@ private:
 
 	std::vector<sf::RectangleShape> _outlineSides;
 	int _numWordsToFind;
-	int _wordValue;
 	int _score = 0;
 	int _levelTime;
 	int _remainingTime;

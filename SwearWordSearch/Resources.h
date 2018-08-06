@@ -29,6 +29,11 @@ enum MainStates
 	MAINSTATES_DEFAULT
 };
 
+enum GameMode
+{
+	AGAINST_THE_CLOCK
+};
+
 
 enum Difficulty
 {
@@ -57,6 +62,7 @@ public:
 	static void LoadImages();
 	static void LoadFonts();
 	static void LoadWords();
+	static void LoadLevelConfigs();
 
 	
 
@@ -78,6 +84,7 @@ private:
 	static std::vector<std::string> _words;
 	static std::map<std::string, sf::Font> _fonts;
 	static std::map<std::string, sf::Texture> _textures;
+	//TODO: add the storage container for the level configs for each mode
 };
 
 class Random
