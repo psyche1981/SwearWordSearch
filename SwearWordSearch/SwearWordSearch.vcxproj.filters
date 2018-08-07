@@ -88,6 +88,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Resources\words.txt" />
+    <Text Include="Resources\levels_config.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="Resources\words.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
