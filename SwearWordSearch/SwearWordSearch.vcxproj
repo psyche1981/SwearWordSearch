@@ -156,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\update_word_list.py" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Cell.h" />

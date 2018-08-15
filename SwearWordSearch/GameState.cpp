@@ -61,7 +61,7 @@ void GameState::Update(float dt)
 			//temp need beeter way to show level completed
 			_instructionString = "Level Completed. You Scored " + std::to_string(_score);
 			_instructionText.setString(_instructionString);
-
+			
 			_update = false;
 			_bonusTime = 0;
 			_timer.End();		
@@ -148,8 +148,9 @@ void GameState::Input(sf::Event event)
 										_bonusTime += _level->GetBonusTime();
 										_numWordsToFind--;
 										if (_numWordsToFind == 0)
-										{
+										{											
 											_levelCompleted = true;
+											_score += _remainingTime;
 											_levelNumber++;
 										}
 									}
