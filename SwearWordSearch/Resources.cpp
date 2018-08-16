@@ -4,6 +4,7 @@ std::map<std::string, sf::Font> Resources::_fonts;
 std::map<std::string, sf::Texture> Resources::_textures;
 std::vector<std::string> Resources::_words;
 std::mt19937 Random::_randomEngine;
+std::vector<std::vector<int>> Resources::_atcConfig;
 
 sf::Texture Resources::LoadTexture(const std::string& filename)
 {
@@ -48,7 +49,42 @@ void Resources::LoadWords()
 
 void Resources::LoadLevelConfigs()
 {
-	//TODO: load file into right places
+	std::ifstream f("Resources/level_config.txt");
+	if (!f)
+	{
+		std::cout << "Failed to load the level configurations" << std::endl;
+	}
+	else
+	{
+		std::string s;
+		std::stringstream ss;
+		int time;
+		int numWords;
+		std::vector<int> tempVec;
+		while (!f.eof())
+		{			
+			std::getline(f, s);
+			if (s == "## against_the_clock ##")
+			{				
+				//TODO: load in the configs
+				while (s != "## end ##")
+				{
+					std::getline(f, s);
+					if (s != "## end ##")
+					{
+						ss.str(s);
+						ss >> time;
+						ss >> numWords;
+						tempVec.push_back(time);
+						tempVec.push_back(numWords);
+						_atcConfig.push_back(tempVec);
+						tempVec.clear();
+						ss.clear();
+					}					
+				}
+			}
+		}
+	}
 }
 
 const sf::Font & Resources::GetFont(const std::string & name)
@@ -94,6 +130,11 @@ const std::vector<std::string>& Resources::GetWords(int n)
 		}
 		return words;
 	}
+}
+
+const std::vector<std::vector<int>>& Resources::GetATCConfig()
+{
+	return _atcConfig;
 }
 
 sf::Font Resources::LoadFont(const std::string& filename)

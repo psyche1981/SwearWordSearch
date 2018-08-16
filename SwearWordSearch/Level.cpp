@@ -9,51 +9,37 @@ Level::Level(GameMode mode, Difficulty diff, int levelNumber)
 	//DEBUG:
 	std::cout << "Level " << _levelNumber << " created" << std::endl;
 	
-	//TODO: get level config from resources
+	
 	//levelconfig: index 0 - time, index 1 - words
-	std::vector<int> levelConfig{ 30, 1 };//temp initialisation
+	std::vector<int> levelConfig = Resources::GetATCConfig()[_levelNumber - 1];
 
 	switch (_difficulty)
 	{
 	case Difficulty::EASY:
 		_bonusTime = 3;
 		_wordValue = 10;
-		//temp until config file loaded properly
-		/*_levelTime = levelConfig[0];
-		_numWordsToFind = levelConfig[1];*/
+		_levelTime = levelConfig[0];
+		_numWordsToFind = levelConfig[1];
+		_numWordsInGrid = 30;
 		break;
 	case Difficulty::INTERMEDIATE:
-		_bonusTime = 1;
-		_wordValue = 12;
-		//temp until config file loaded properly
-		/*_levelTime = levelConfig[0];
-		_numWordsToFind = levelConfig[1];*/
+		_bonusTime = 2;
+		_wordValue = 12;		
+		_levelTime = levelConfig[0];
+		_numWordsToFind = levelConfig[1];
+		_numWordsInGrid = _numWordsToFind + 10;
 		break;
 	case Difficulty::HARD:
-		_bonusTime = 0;
+		_bonusTime = 1;
 		_wordValue = 15;
-		//temp until config file loaded properly
-		/*_levelTime = levelConfig[0];
-		_numWordsToFind = levelConfig[1];*/
+		_levelTime = levelConfig[0];
+		_numWordsToFind = levelConfig[1];
+		_numWordsInGrid = _numWordsToFind + 1;
 		break;
 	default:
 		_bonusTime = 3;
 		_wordValue = 10;
 	}
-
-
-	//temp until config file loaded properly
-	//_levelTime = levelConfig[0];
-	//_numWordsToFind = levelConfig[1];
-	_levelTime = 30;
-	_numWordsToFind = _levelNumber;
-	if (_numWordsToFind > 30)
-	{
-		_numWordsToFind = 30;
-	}
-
-	
-
 }
 
 Level::~Level()

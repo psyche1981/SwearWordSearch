@@ -31,7 +31,7 @@ void GameOverState::Input(sf::Event event)
 	{
 		if (event.key.code == sf::Keyboard::Space)
 		{
-			_nextState = MainStates::GAME;
+			_nextState = MainStates::MENU;
 			NotifyObservers();
 		}
 	}

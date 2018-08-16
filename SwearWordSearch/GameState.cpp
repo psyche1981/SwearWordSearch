@@ -70,8 +70,7 @@ void GameState::Update(float dt)
 	else
 	{
 		_update = false;
-
-		//TODO: go to game over state
+		
 		_nextState = MainStates::GAME_OVER;
 		NotifyObservers();
 	}
@@ -419,8 +418,8 @@ void GameState::CreateLevel(int levelNumber)
 		ResetLevel();
 	}
 	
-	PopulateGrid(30);
 	_level = std::make_unique<Level>(GameMode::AGAINST_THE_CLOCK, _difficulty, levelNumber);
+	PopulateGrid(_level->GetNumWordsInGrid());	
 	_numWordsToFind = _level->GetNumWordsToFind();
 	_levelTime = _level->GetLevelTime();
 	_remainingTime = _levelTime;
@@ -468,7 +467,7 @@ void GameState::ShowHints()
 	else if (_difficulty == Difficulty::INTERMEDIATE)
 	{
 		//small amount of words shown		
-		for (int i = 0; i < _words.size() / 8; i++)
+		for (int i = 0; i < _words.size() / 5; i++)
 		{
 			_wordSfTexts.emplace_back(_words[i], Resources::GetFont("CNB"), 20);
 			_wordSfTexts[i].setPosition(600.0f, 110.0f + i * 20);

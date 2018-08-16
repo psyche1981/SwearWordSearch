@@ -172,7 +172,7 @@
     <ClInclude Include="TutorialState.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Resources\levels_config.txt" />
+    <Text Include="Resources\level_config.txt" />
     <Text Include="Resources\words.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
