@@ -16,4 +16,5 @@ private:
 	int _score;
 
 	sf::Text _goText;
+	sf::Text _instText;
 };
