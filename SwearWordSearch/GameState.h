@@ -48,6 +48,7 @@ private:
 	bool IndicesAreValid(const std::vector<int>& cellIndices, const std::string& word);
 	std::string RemoveHashes(const std::string& word);
 	std::string ReplaceHashWithSpace(const std::string& word);
+	void ApplyTimeRemaining();
 
 	std::vector<sf::RectangleShape> _outlineSides;
 	int _numWordsToFind;

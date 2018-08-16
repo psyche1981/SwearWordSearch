@@ -17,28 +17,31 @@ Level::Level(GameMode mode, Difficulty diff, int levelNumber)
 	{
 	case Difficulty::EASY:
 		_bonusTime = 3;
-		_wordValue = 10;
+		_wordValue = 1;
 		_levelTime = levelConfig[0];
 		_numWordsToFind = levelConfig[1];
-		_numWordsInGrid = 30;
+		_numWordsInGrid = 20;
+		_timeBonusFactor = 0.2f;
 		break;
 	case Difficulty::INTERMEDIATE:
 		_bonusTime = 2;
-		_wordValue = 12;		
+		_wordValue = 5;		
 		_levelTime = levelConfig[0];
 		_numWordsToFind = levelConfig[1];
 		_numWordsInGrid = _numWordsToFind + 10;
+		_timeBonusFactor = 0.6f;
 		break;
 	case Difficulty::HARD:
 		_bonusTime = 1;
 		_wordValue = 15;
 		_levelTime = levelConfig[0];
 		_numWordsToFind = levelConfig[1];
-		_numWordsInGrid = _numWordsToFind + 1;
+		_numWordsInGrid = _numWordsToFind + 2;
+		_timeBonusFactor = 1.0f;
 		break;
 	default:
 		_bonusTime = 3;
-		_wordValue = 10;
+		_wordValue = 5;
 	}
 }
 

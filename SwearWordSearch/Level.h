@@ -17,6 +17,7 @@ public:
 	int GetNumWordsInGrid() { return _numWordsInGrid; }
 	int GetBonusTime() { return _bonusTime; }
 	int GetWordValue() { return _wordValue; }
+	float GetTimeBonusFactor() { return _timeBonusFactor; }
 
 private:
 	int _levelNumber;
@@ -25,6 +26,7 @@ private:
 	int _bonusTime;
 	int _wordValue;
 	int _numWordsInGrid;
+	float _timeBonusFactor;
 
 	GameMode _mode;
 	Difficulty _difficulty;

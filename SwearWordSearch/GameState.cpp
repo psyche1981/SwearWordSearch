@@ -149,7 +149,7 @@ void GameState::Input(sf::Event event)
 										if (_numWordsToFind == 0)
 										{											
 											_levelCompleted = true;
-											_score += _remainingTime;
+											ApplyTimeRemaining();
 											_levelNumber++;
 										}
 									}
@@ -391,6 +391,11 @@ std::string GameState::ReplaceHashWithSpace(const std::string& word)
 	std::string newWord = word;
 	std::replace(newWord.begin(), newWord.end(), '#', ' ');
 	return newWord;
+}
+
+void GameState::ApplyTimeRemaining()
+{
+	_score += _remainingTime * _level->GetTimeBonusFactor();
 }
 
 void GameState::ResetLevel()
