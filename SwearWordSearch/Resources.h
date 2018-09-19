@@ -73,6 +73,7 @@ public:
 	static const size_t GetNumWords();
 	static const std::vector<std::string>& GetWords(int n = 0);
 	static const std::vector<std::vector<int>>& GetATCConfig();
+	static char keys[26]; 
 
 
 private:

@@ -188,6 +188,14 @@ void GameState::Input(sf::Event event)
 		}
 		
 	}
+	else if (event.type == sf::Event::KeyPressed)
+	{
+		if (event.key.code == sf::Keyboard::Escape)
+		{
+			_nextState = MainStates::GAME_OVER;
+			NotifyObservers();
+		}
+	}
 }
 
 void GameState::PopulateGrid(int numWords)

@@ -14,7 +14,9 @@ public:
 
 private:
 	int _score;
+	std::string _hsNameStr;
 
 	sf::Text _goText;
 	sf::Text _instText;
+	sf::Text _hsNameText;
 };

@@ -5,6 +5,7 @@ std::map<std::string, sf::Texture> Resources::_textures;
 std::vector<std::string> Resources::_words;
 std::mt19937 Random::_randomEngine;
 std::vector<std::vector<int>> Resources::_atcConfig;
+char Resources::keys[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 
 sf::Texture Resources::LoadTexture(const std::string& filename)
 {
