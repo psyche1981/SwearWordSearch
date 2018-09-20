@@ -46,6 +46,7 @@ void Resources::LoadWords()
 				_words.push_back(s);
 			}			
 		}
+		f.close();
 	}
 }
 
@@ -85,6 +86,7 @@ void Resources::LoadLevelConfigs()
 				}
 			}
 		}
+		f.close();
 	}
 }
 
@@ -137,6 +139,7 @@ void Resources::LoadHighScores()
 		_atcHighScores.push_back(easyATC);
 		_atcHighScores.push_back(interATC);
 		_atcHighScores.push_back(hardATC);
+		f.close();
 	}
 }
 
@@ -204,7 +207,16 @@ void Resources::AddATCHighScore(HighScore hs)
 
 void Resources::SaveHighScores()
 {
-	std::cout << "saving..." << std::endl;
+	std::ofstream file;
+	file.open("Resources/high_scores.hsc");
+	for (size_t i = 0; i < _atcHighScores.size(); i++)
+	{
+		for (auto it = _atcHighScores[i].begin(); it != _atcHighScores[i].end(); ++it)
+		{
+			file << it->mode << " " << it->difficulty << " " << it->name << " " << it->score << "\n";
+		}
+	}
+	file.close();
 }
 
 void Resources::SortHighScores(std::vector<HighScore>& hsVec)

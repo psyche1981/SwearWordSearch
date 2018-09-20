@@ -29,7 +29,6 @@ GameOverState::~GameOverState()
 void GameOverState::Update(float dt)
 {
 	_hsNameText.setString(_hsNameStr);
-	std::cout << _hsNameStr << std::endl;
 }
 
 void GameOverState::Draw(sf::RenderWindow * wnd)
