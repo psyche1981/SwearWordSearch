@@ -52,9 +52,7 @@ enum WordDirection
 	NE,
 	NW, 
 	SE,
-	SW,
-
-	SIZE
+	SW
 };
 
 class Resources

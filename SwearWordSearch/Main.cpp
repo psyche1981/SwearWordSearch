@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <SFML\Graphics.hpp>
+#include <Windows.h>
 
 #include "MainStateManager.h"
 #include "Resources.h"
@@ -58,6 +59,7 @@ private:
 
 int main()
 {
+	//FreeConsole();
 	Resources::LoadFonts();
 	Resources::LoadImages();
 	Resources::LoadWords();
