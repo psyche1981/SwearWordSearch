@@ -16,6 +16,7 @@ public:
 
 private:
 	sf::Text _titleText;
+	sf::Text _backText;
 	std::vector<sf::Text> _diffHeaderTexts;
 	std::vector<sf::Text> _easyTexts;
 	std::vector<sf::Text> _interTexts;

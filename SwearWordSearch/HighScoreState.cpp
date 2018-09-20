@@ -5,6 +5,9 @@ HighScoreState::HighScoreState()
 	_titleText = sf::Text("AGAINST THE CLOCK\n   HIGH SCORES", Resources::GetFont("CNB"), 40);
 	_titleText.setColor(sf::Color::Black);
 	_titleText.setPosition(220.0f, 50.0f);
+	_backText = sf::Text("BACK", Resources::GetFont("CNB"), 30);
+	_backText.setColor(sf::Color::Blue);
+	_backText.setPosition(690.0f, 550.0f);
 	_atcHighScores = Resources::GetATCHighScores();
 	CreateDiffHeaders();
 	PopulateHSTexts();
@@ -12,6 +15,7 @@ HighScoreState::HighScoreState()
 
 HighScoreState::~HighScoreState()
 {
+	std::cout << "HS destroyed" << std::endl;
 }
 
 void HighScoreState::Update(float dt)
@@ -21,6 +25,7 @@ void HighScoreState::Update(float dt)
 void HighScoreState::Draw(sf::RenderWindow* wnd)
 {
 	wnd->draw(_titleText);
+	wnd->draw(_backText);
 	for (auto& t : _diffHeaderTexts)
 	{
 		wnd->draw(t);
@@ -44,6 +49,16 @@ void HighScoreState::Input(sf::Event event)
 	if (event.type == sf::Event::KeyPressed)
 	{
 		if (event.key.code == sf::Keyboard::Escape)
+		{
+			_nextState = MainStates::MENU;
+			NotifyObservers();
+		}
+	}
+	if (event.type == sf::Event::MouseButtonPressed)
+	{
+		int x = event.mouseButton.x;
+		int y = event.mouseButton.y;
+		if (_backText.getGlobalBounds().contains(x, y))
 		{
 			_nextState = MainStates::MENU;
 			NotifyObservers();
