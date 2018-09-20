@@ -9,6 +9,7 @@
 #include "TutorialState.h"
 #include "GameOverState.h"
 #include "Observer.h"
+#include "HighScoreState.h"
 
 class MainStateManager : public Observer
 {

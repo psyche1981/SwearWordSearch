@@ -57,6 +57,11 @@ void MainStateManager::ChangeState(MainStates nextState)
 	case MainStates::TUTORIAL:
 		_currentState = std::make_unique<TutorialState>();
 		_currentState->AddObserver(this);
+		break;
+	case MainStates::HIGH_SCORES:
+		_currentState = std::make_unique<HighScoreState>();
+		_currentState->AddObserver(this);
+		break;
 	}
 }
 

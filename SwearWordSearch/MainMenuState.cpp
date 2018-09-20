@@ -60,6 +60,11 @@ void MainMenuState::Input(sf::Event event)
 				_nextState = MainStates::TUTORIAL;
 				NotifyObservers();
 			}
+			else if (_mainTexts[2].getGlobalBounds().contains(x, y))
+			{
+				_nextState = MainStates::HIGH_SCORES;
+				NotifyObservers();
+			}
 		}
 		else if (_subState == SubState::DIFFICULTY_SELECT)
 		{
@@ -104,11 +109,14 @@ void MainMenuState::CreateMainSubstate()
 	//TODO: menu item factory function instead of hard coded
 	_mainTexts.emplace_back("PLAY", Resources::GetFont("CNB"), 30);
 	_mainTexts.emplace_back("TUTORIAL", Resources::GetFont("CNB"), 30);
+	_mainTexts.emplace_back("HIGH SCORES", Resources::GetFont("CNB"), 30);
 
 	_mainTexts[0].setPosition(350.0f, 300.0f);
 	_mainTexts[0].setColor(sf::Color::Blue);
 	_mainTexts[1].setPosition(350.0f, 350.0f);
 	_mainTexts[1].setColor(sf::Color::Blue);
+	_mainTexts[2].setPosition(350.0f, 400.0f);
+	_mainTexts[2].setColor(sf::Color::Blue);
 }
 
 void MainMenuState::CreateDifficultySubstate()

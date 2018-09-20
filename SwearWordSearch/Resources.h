@@ -26,6 +26,7 @@ enum MainStates
 	GAME,
 	GAME_OVER,
 	PAUSE,
+	HIGH_SCORES,
 
 	MAINSTATES_DEFAULT
 };
