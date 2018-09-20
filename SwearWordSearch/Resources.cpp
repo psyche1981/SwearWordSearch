@@ -204,13 +204,17 @@ void Resources::AddATCHighScore(HighScore hs)
 
 void Resources::SaveHighScores()
 {
-	std::cout << "Saving scores" << std::endl;
+	std::cout << "saving..." << std::endl;
 }
 
 void Resources::SortHighScores(std::vector<HighScore>& hsVec)
 {
 	std::sort(hsVec.begin(), hsVec.end(),
 		[](HighScore a, HighScore b) { return a.score > b.score; });
+	while (hsVec.size() > 10)
+	{
+		hsVec.pop_back();
+	}
 }
 
 sf::Font Resources::LoadFont(const std::string& filename)
