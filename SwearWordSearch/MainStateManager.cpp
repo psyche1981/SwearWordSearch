@@ -46,7 +46,8 @@ void MainStateManager::ChangeState(MainStates nextState)
 		{
 			GameState* g = (GameState*)_currentState.get();
 			int score = g->GetScore();
-			_currentState = std::make_unique<GameOverState>(score);
+			Difficulty d = g->GetDifficulty();
+			_currentState = std::make_unique<GameOverState>(d, GameMode::AGAINST_THE_CLOCK,score);
 			_currentState->AddObserver(this);
 		}		
 		break;

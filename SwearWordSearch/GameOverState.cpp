@@ -1,7 +1,9 @@
 #include "GameOverState.h"
 
-GameOverState::GameOverState(int score)
+GameOverState::GameOverState(Difficulty diff, GameMode mode, int score)
 	:
+	_difficulty(diff),
+	_mode(mode),
 	_score(score)
 {
 	std::string s = "GAME OVER\nYou scored " + std::to_string(_score);
@@ -61,6 +63,19 @@ void GameOverState::Input(sf::Event event)
 			{
 				_hsNameStr.erase(last);
 			}			
+		}
+		else if (code == sf::Keyboard::Return)
+		{
+			if (!_hsNameStr.empty())
+			{
+				int m = (int)_mode;
+				int d = (int)_difficulty;
+				HighScore hs(m,d,_hsNameStr,_score);
+				if (m == 0)//ATC
+				{
+					Resources::AddATCHighScore(hs);
+				}
+			}
 		}
 		
 	}

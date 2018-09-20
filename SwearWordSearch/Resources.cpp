@@ -131,6 +131,9 @@ void Resources::LoadHighScores()
 			}
 			ss.clear();
 		}
+		SortHighScores(easyATC);
+		SortHighScores(interATC);
+		SortHighScores(hardATC);
 		_atcHighScores.push_back(easyATC);
 		_atcHighScores.push_back(interATC);
 		_atcHighScores.push_back(hardATC);
@@ -190,6 +193,24 @@ const std::vector<std::vector<int>>& Resources::GetATCConfig()
 const std::vector<std::vector<HighScore>>& Resources::GetATCHighScores()
 {
 	return _atcHighScores;
+}
+
+void Resources::AddATCHighScore(HighScore hs)
+{
+	int d = hs.difficulty;
+	_atcHighScores[d].push_back(hs);
+	SortHighScores(_atcHighScores[d]);
+}
+
+void Resources::SaveHighScores()
+{
+	std::cout << "Saving scores" << std::endl;
+}
+
+void Resources::SortHighScores(std::vector<HighScore>& hsVec)
+{
+	std::sort(hsVec.begin(), hsVec.end(),
+		[](HighScore a, HighScore b) { return a.score > b.score; });
 }
 
 sf::Font Resources::LoadFont(const std::string& filename)

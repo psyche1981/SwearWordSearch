@@ -5,7 +5,7 @@
 class GameOverState : public MainState
 {
 public:
-	GameOverState(int score);
+	GameOverState(Difficulty diff, GameMode mode, int score);
 	~GameOverState();
 
 	void Update(float dt) override;
@@ -14,6 +14,8 @@ public:
 
 private:
 	int _score;
+	Difficulty _difficulty;
+	GameMode _mode;
 	std::string _hsNameStr;
 
 	sf::Text _goText;

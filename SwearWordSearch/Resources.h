@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <algorithm>
 #include <random>
 #include <ctime>
 #include <iostream>
@@ -93,6 +94,9 @@ public:
 	static char keys[26]; 
 
 
+	static void AddATCHighScore(HighScore hs);
+	static void SaveHighScores();
+
 private:
 	Resources() {}
 	~Resources() {}
@@ -100,6 +104,8 @@ private:
 	static sf::Texture LoadTexture(const std::string& filename);
 	static sf::Font LoadFont(const std::string& filename);
 	static bool PreviouslySelected(std::vector<int>& prev, int n);
+
+	static void SortHighScores(std::vector<HighScore>& hsVec);
 
 	static std::vector<std::string> _words;
 	static std::map<std::string, sf::Font> _fonts;

@@ -21,6 +21,7 @@ public:
 	void Input(sf::Event event) override;
 
 	const int GetScore() const { return _score; }
+	const Difficulty GetDifficulty() { return _difficulty; }
 
 private:
 	std::vector<std::unique_ptr<Cell>> _grid;
