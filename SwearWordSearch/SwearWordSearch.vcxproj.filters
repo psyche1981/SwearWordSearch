@@ -54,6 +54,9 @@
     <None Include="Resources\update_word_list.py">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Resources\high_scores.hsc">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Resources.h">

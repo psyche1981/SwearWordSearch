@@ -43,6 +43,23 @@ enum Difficulty
 	HARD
 };
 
+struct HighScore
+{
+	HighScore(int mode, int difficulty, std::string& name, int score)
+		:
+		name(name),
+		score(score)
+	{
+		this->mode = (GameMode)mode;
+		this->difficulty = (Difficulty)difficulty;
+	}
+
+	Difficulty difficulty;
+	GameMode mode;
+	std::string name;
+	int score;
+};
+
 enum WordDirection
 {
 	LEFT,
@@ -62,7 +79,7 @@ public:
 	static void LoadFonts();
 	static void LoadWords();
 	static void LoadLevelConfigs();
-
+	static void LoadHighScores();
 	
 
 	static const sf::Font& GetFont(const std::string& name);
@@ -71,6 +88,7 @@ public:
 	static const size_t GetNumWords();
 	static const std::vector<std::string>& GetWords(int n = 0);
 	static const std::vector<std::vector<int>>& GetATCConfig();
+	static const std::vector<std::vector<HighScore>>& GetATCHighScores();
 	static char keys[26]; 
 
 
@@ -85,8 +103,10 @@ private:
 	static std::vector<std::string> _words;
 	static std::map<std::string, sf::Font> _fonts;
 	static std::map<std::string, sf::Texture> _textures;
-	//TODO: add the storage container for the level configs for each mode
+	//add the storage container for the level configs for each mode
 	static std::vector<std::vector<int>> _atcConfig;
+
+	static std::vector<std::vector<HighScore>> _atcHighScores;
 };
 
 class Random

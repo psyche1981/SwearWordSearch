@@ -158,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Resources\high_scores.hsc" />
     <None Include="Resources\update_word_list.py" />
   </ItemGroup>
   <ItemGroup>

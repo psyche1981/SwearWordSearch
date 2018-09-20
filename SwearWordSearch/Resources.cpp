@@ -5,6 +5,7 @@ std::map<std::string, sf::Texture> Resources::_textures;
 std::vector<std::string> Resources::_words;
 std::mt19937 Random::_randomEngine;
 std::vector<std::vector<int>> Resources::_atcConfig;
+std::vector<std::vector<HighScore>> Resources::_atcHighScores;
 char Resources::keys[26] = { 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z' };
 
 sf::Texture Resources::LoadTexture(const std::string& filename)
@@ -66,8 +67,7 @@ void Resources::LoadLevelConfigs()
 		{			
 			std::getline(f, s);
 			if (s == "## against_the_clock ##")
-			{				
-				//TODO: load in the configs
+			{	
 				while (s != "## end ##")
 				{
 					std::getline(f, s);
@@ -88,7 +88,56 @@ void Resources::LoadLevelConfigs()
 	}
 }
 
-const sf::Font & Resources::GetFont(const std::string & name)
+void Resources::LoadHighScores()
+{
+	std::ifstream f("Resources/high_scores.hsc");
+	if (!f)
+	{
+		std::cout << "Failed to load the high scores file" << std::endl;
+	}
+	else
+	{
+		std::string s;
+		std::stringstream ss;
+		int mode;
+		int diff;
+		std::string name;
+		int score;
+		std::vector<HighScore> easyATC;
+		std::vector<HighScore> interATC;
+		std::vector<HighScore> hardATC;
+		while (std::getline(f, s))
+		{
+			ss.str(s);
+			ss >> mode;
+			ss >> diff;
+			ss >> name;
+			ss >> score;
+			HighScore hs(mode, diff, name, score);
+			if (mode == 0)
+			{
+				switch (diff)
+				{
+				case 0:
+					easyATC.push_back(hs);
+					break;
+				case 1:
+					interATC.push_back(hs);
+					break;
+				case 2:
+					hardATC.push_back(hs);
+					break;
+				}
+			}
+			ss.clear();
+		}
+		_atcHighScores.push_back(easyATC);
+		_atcHighScores.push_back(interATC);
+		_atcHighScores.push_back(hardATC);
+	}
+}
+
+const sf::Font& Resources::GetFont(const std::string & name)
 {
 	return _fonts.at(name);
 }
@@ -98,7 +147,7 @@ const sf::Texture& Resources::GetTexture(const std::string & name)
 	return _textures.at(name);
 }
 
-const std::string & Resources::GetWord(int index)
+const std::string& Resources::GetWord(int index)
 {
 	return _words[index];
 }
@@ -136,6 +185,11 @@ const std::vector<std::string>& Resources::GetWords(int n)
 const std::vector<std::vector<int>>& Resources::GetATCConfig()
 {
 	return _atcConfig;
+}
+
+const std::vector<std::vector<HighScore>>& Resources::GetATCHighScores()
+{
+	return _atcHighScores;
 }
 
 sf::Font Resources::LoadFont(const std::string& filename)

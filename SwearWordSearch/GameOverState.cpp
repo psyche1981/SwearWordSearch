@@ -49,7 +49,10 @@ void GameOverState::Input(sf::Event event)
 		}
 		else if (code >= 0 && code <= 25)
 		{
-			_hsNameStr += Resources::keys[code];
+			if (_hsNameStr.length() <= 8)
+			{
+				_hsNameStr += Resources::keys[code];
+			}			
 		}
 		else if (code == sf::Keyboard::BackSpace)
 		{

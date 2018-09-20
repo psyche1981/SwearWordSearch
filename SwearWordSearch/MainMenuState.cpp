@@ -5,7 +5,6 @@ MainMenuState::MainMenuState()
 	_subState(SubState::MAIN),
 	_selectedDifficulty(Difficulty::EASY)
 {
-	std::cout << "MEnu Created" << std::endl;
 	CreateMainSubstate();	
 	CreateDifficultySubstate();
 }
